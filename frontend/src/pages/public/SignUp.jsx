@@ -1,31 +1,51 @@
 import { useMemo, useState } from "react";
-import "./SignUp.css";
-
-const ROLES = [
-  { id: "participant", label: "Participant", emoji: "🙋" },
-  { id: "judge",       label: "Judge",       emoji: "⚖️"  },
-  { id: "admin",       label: "Admin",       emoji: "🛡️"  },
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
+import "./Signup.css";
+import { signup } from "../../features/auth/authSlice";
+/* ── Auth providers ── */
+const authProviders = [
+  { id: "google", label: "Continue with Google", icon: "google" },
+  { id: "github", label: "Continue with GitHub", icon: "github" },
 ];
 
-/* ─────────────── Icons ─────────────── */
+/* ── Icons ── */
+function GoogleIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="signup-button-icon">
+      <path fill="#4285f4" d="M21.6 12.23c0-.76-.07-1.48-.2-2.18H12v4.13h5.38a4.6 4.6 0 0 1-2 3.02v2.51h3.24c1.9-1.74 2.98-4.3 2.98-7.48Z" />
+      <path fill="#34a853" d="M12 22c2.7 0 4.96-.9 6.62-2.29l-3.24-2.51c-.9.6-2.05.96-3.38.96-2.6 0-4.8-1.75-5.59-4.12H3.06v2.59A10 10 0 0 0 12 22Z" />
+      <path fill="#fbbc05" d="M6.41 14.04A6 6 0 0 1 6.1 12c0-.7.11-1.38.31-2.04V7.37H3.06A10 10 0 0 0 2 12c0 1.61.38 3.14 1.06 4.63l3.35-2.59Z" />
+      <path fill="#ea4335" d="M12 5.84c1.47 0 2.79.51 3.83 1.5l2.87-2.87A9.64 9.64 0 0 0 12 2a10 10 0 0 0-8.94 5.37l3.35 2.59C7.2 7.59 9.4 5.84 12 5.84Z" />
+    </svg>
+  );
+}
+
+function GitHubIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="signup-button-icon">
+      <path
+        fill="currentColor"
+        d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.69c-2.78.6-3.37-1.18-3.37-1.18-.45-1.16-1.1-1.47-1.1-1.47-.9-.62.07-.6.07-.6 1 .07 1.52 1.03 1.52 1.03.89 1.52 2.34 1.08 2.91.83.09-.64.35-1.08.63-1.33-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.48 9.48 0 0 1 12 7.02c.85 0 1.7.11 2.5.34 1.9-1.29 2.74-1.02 2.74-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.86v2.56c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"
+      />
+    </svg>
+  );
+}
+
 function UserIcon() {
   return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className="su-input-icon">
-      <path
-        d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0 2c-5.33 0-8 2.67-8 4v1h16v-1c0-1.33-2.67-4-8-4Z"
-        fill="none"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="1.7"
-      />
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="signup-input-icon">
+      <circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
 
 function MailIcon() {
   return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className="su-input-icon">
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="signup-input-icon">
       <path
         d="M4.75 6.75h14.5v10.5H4.75V6.75Zm.5.4L12 12.6l6.75-5.45M5.42 17l4.85-4.1m3.46 0L18.58 17"
         fill="none"
@@ -40,130 +60,130 @@ function MailIcon() {
 
 function LockIcon() {
   return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className="su-input-icon">
-      <path
-        d="M7.75 10.75V8a4.25 4.25 0 0 1 8.5 0v2.75m-9.5 0h10.5a1 1 0 0 1 1 1v6.5a1 1 0 0 1-1 1H6.75a1 1 0 0 1-1-1v-6.5a1 1 0 0 1 1-1Z"
-        fill="none"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="1.7"
-      />
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="signup-input-icon">
+      <rect x="5" y="11" width="14" height="10" rx="2" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M8 11V7a4 4 0 0 1 8 0v4" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
 
-function EyeIcon({ off }) {
-  return off ? (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className="su-eye-icon">
-      <path
-        d="M3 3l18 18M10.5 10.677A3 3 0 0 0 14.83 15M6.351 6.347C4.933 7.4 3.79 8.84 3 10.5 4.773 14.27 8.1 17 12 17c1.353 0 2.644-.37 3.776-1.023M9 5.291A9.33 9.33 0 0 1 12 5c3.9 0 7.227 2.73 9 6.5-.735 1.566-1.775 2.94-3.032 4.03"
-        fill="none"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="1.7"
-      />
+function EyeOffIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="signup-eye-icon">
+      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24M1 1l22 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
-  ) : (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className="su-eye-icon">
-      <path
-        d="M3 10.5C4.773 6.73 8.1 4 12 4s7.227 2.73 9 6.5C19.227 14.27 15.9 17 12 17S4.773 14.27 3 10.5Z"
-        fill="none"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="1.7"
-      />
-      <circle cx="12" cy="10.5" r="2.5" fill="none" stroke="currentColor" strokeWidth="1.7" />
+  );
+}
+
+function EyeIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="signup-eye-icon">
+      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" strokeWidth="1.7" />
     </svg>
   );
 }
 
 function ArrowIcon() {
   return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className="su-arrow-icon">
-      <path
-        d="M5 12h13m-5-5 5 5-5 5"
-        fill="none"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-      />
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="signup-arrow-icon">
+      <path d="M5 12h13m-5-5 5 5-5 5" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
     </svg>
   );
 }
 
-function ShieldCheckIcon() {
+function ShieldIcon() {
   return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className="su-badge-icon">
-      <path
-        d="M12 3.5 4.75 6.75v5c0 4 3.25 7.5 7.25 8.75 4-1.25 7.25-4.75 7.25-8.75v-5L12 3.5Z"
-        fill="none"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="1.6"
-      />
-      <path
-        d="m9 12 2 2 4-4"
-        fill="none"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="1.6"
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="signup-badge-icon">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M9 12l2 2 4-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function BackArrowIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="signup-back-icon">
+      <path d="M19 12H5m5-5-5 5 5 5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+/* ── DevDash Hexagon Logo ── */
+function HexLogo() {
+  return (
+    <svg viewBox="0 0 40 40" aria-hidden="true" className="login-hex-logo">
+      <defs>
+        <mask id="hole">
+          {/* Everything white stays visible */}
+          <rect width="100%" height="100%" fill="white" />
+          {/* Everything black cuts a hole */}
+          <polygon
+            points="20,10 30,15.5 30,24.5 20,30 10,24.5 10,15.5"
+            fill="black"
+          />
+        </mask>
+      </defs>
+
+      {/* Outer hexagon with the mask applied */}
+      <polygon
+        points="20,1 37,10.5 37,29.5 20,39 3,29.5 3,10.5"
+        fill="#0fa898"
+        mask="url(#hole)"
       />
     </svg>
   );
 }
 
-/* ─────────────── Mascot ─────────────── */
+/* ── Mascot ── */
 function Mascot() {
   return (
-    <div className="su-mascot-wrap" aria-label="Animated hackathon builder mascot">
-      <svg className="su-mascot" viewBox="0 0 360 320" role="img">
-        <title>Animated hackathon builder mascot</title>
+    <div className="signup-mascot-wrap" aria-label="Hackathon builder mascot">
+      <svg className="signup-mascot" viewBox="0 0 360 320" role="img">
+        <title>Hackathon builder mascot</title>
         <defs>
-          <linearGradient id="suBotBody" x1="92" y1="72" x2="268" y2="250">
+          <linearGradient id="signupBotBody" x1="92" y1="72" x2="268" y2="250">
             <stop stopColor="#ffffff" />
             <stop offset="1" stopColor="#d8fff3" />
           </linearGradient>
-          <linearGradient id="suBotScreen" x1="105" y1="90" x2="255" y2="205">
+          <linearGradient id="signupBotScreen" x1="105" y1="90" x2="255" y2="205">
             <stop stopColor="#3159f5" />
             <stop offset="1" stopColor="#0fa898" />
           </linearGradient>
-          <linearGradient id="suBadgeGlow" x1="115" y1="216" x2="245" y2="294">
+          <linearGradient id="signupBadgeGlow" x1="115" y1="216" x2="245" y2="294">
             <stop stopColor="#ffd166" />
             <stop offset="1" stopColor="#ff7a7a" />
           </linearGradient>
-          <filter id="suBotShadow" x="-20%" y="-20%" width="140%" height="150%">
+          <filter id="signupBotShadow" x="-20%" y="-20%" width="140%" height="150%">
             <feDropShadow dx="0" dy="22" stdDeviation="18" floodColor="#21314f" floodOpacity="0.16" />
           </filter>
         </defs>
-        <g className="su-mascot-orbit">
+
+        <g className="signup-mascot-orbit">
           <path d="M70 172c46-72 177-86 226-10" fill="none" stroke="#9be7dc" strokeWidth="8" strokeLinecap="round" />
           <path d="M266 70l10 19 21 3-15 15 4 21-20-10-19 10 4-21-16-15 22-3 9-19Z" fill="#ffd166" />
           <circle cx="74" cy="174" r="9" fill="#ff7a7a" />
         </g>
-        <g className="su-mascot-body" filter="url(#suBotShadow)">
+
+        <g className="signup-mascot-body" filter="url(#signupBotShadow)">
           <path d="M120 112c0-39 27-67 60-67s60 28 60 67v14H120v-14Z" fill="#ffffff" />
-          <rect x="92" y="96" width="176" height="142" rx="42" fill="url(#suBotBody)" stroke="#182542" strokeWidth="7" />
-          <rect x="119" y="123" width="122" height="66" rx="24" fill="url(#suBotScreen)" />
+          <rect x="92" y="96" width="176" height="142" rx="42" fill="url(#signupBotBody)" stroke="#182542" strokeWidth="7" />
+          <rect x="119" y="123" width="122" height="66" rx="24" fill="url(#signupBotScreen)" />
           <path d="M145 156h.1M215 156h.1" stroke="#ffffff" strokeWidth="13" strokeLinecap="round" />
           <path d="M164 174c11 9 24 9 35 0" fill="none" stroke="#ffffff" strokeWidth="6" strokeLinecap="round" />
           <path d="M180 45V22" stroke="#182542" strokeWidth="7" strokeLinecap="round" />
           <circle cx="180" cy="18" r="10" fill="#ff7a7a" stroke="#182542" strokeWidth="5" />
           <path d="M96 158c-29 3-48 21-48 47 0 24 17 40 42 45" fill="none" stroke="#182542" strokeWidth="11" strokeLinecap="round" />
           <path d="M264 158c29 3 48 21 48 47 0 24-17 40-42 45" fill="none" stroke="#182542" strokeWidth="11" strokeLinecap="round" />
-          <rect x="120" y="224" width="120" height="58" rx="22" fill="url(#suBadgeGlow)" stroke="#182542" strokeWidth="7" />
+          <rect x="120" y="224" width="120" height="58" rx="22" fill="url(#signupBadgeGlow)" stroke="#182542" strokeWidth="7" />
           <path d="M151 253h58M151 269h34" stroke="#182542" strokeWidth="6" strokeLinecap="round" />
           <path d="M226 244l8 9 14-19" fill="none" stroke="#182542" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
         </g>
-        <g className="su-spark">
+
+        <g className="signup-spark">
           <path d="M67 79v22M56 90h22" stroke="#3159f5" strokeWidth="6" strokeLinecap="round" />
         </g>
-        <g className="su-spark su-spark-two">
+        <g className="signup-spark signup-spark-two">
           <path d="M300 211v22M289 222h22" stroke="#ff7a7a" strokeWidth="6" strokeLinecap="round" />
         </g>
       </svg>
@@ -171,424 +191,355 @@ function Mascot() {
   );
 }
 
-/* ─────────────── Reusable field wrapper ─────────────── */
-function Field({ label, badge, error, hint, children }) {
-  return (
-    <div className={`su-field${error ? " su-field--error" : ""}`}>
-      <div className="su-field-label-row">
-        <label>{label}</label>
-        {badge && <span className="su-field-badge">{badge}</span>}
-      </div>
-      {children}
-      {error
-        ? <p className="su-field-error">{error}</p>
-        : hint && <p className="su-field-hint">{hint}</p>
-      }
-    </div>
-  );
-}
-
-/* ─────────────── Password input with show/hide ─────────────── */
-function PasswordInput({ id, value, onChange, onBlur, placeholder, error, autoComplete }) {
-  const [visible, setVisible] = useState(false);
-  return (
-    <div className={`su-input-shell${error ? " su-input-error" : ""}`}>
-      <LockIcon />
-      <input
-        id={id}
-        name={id}
-        type={visible ? "text" : "password"}
-        autoComplete={autoComplete}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-        onBlur={onBlur}
-        aria-invalid={Boolean(error)}
-      />
-      <button
-        type="button"
-        className="su-eye-btn"
-        onClick={() => setVisible((v) => !v)}
-        aria-label={visible ? "Hide password" : "Show password"}
-        tabIndex={0}
-      >
-        <EyeIcon off={visible} />
-      </button>
-    </div>
-  );
-}
-
-/* ─────────────── Main SignUp Component ─────────────── */
-function SignUp() {
-  const [form, setForm] = useState({
-    fullName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    role: "",
-  });
+/* ── Main Signup Component ── */
+function Signup() {
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [role, setRole] = useState("participant");
   const [touched, setTouched] = useState({});
-  const [submitted, setSubmitted] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [apiError, setApiError] = useState(null);
-  const [success, setSuccess] = useState(false);
+  const [selectedProvider, setSelectedProvider] = useState("");
+  const [showPasswordRules, setShowPasswordRules] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const set = (field) => (e) =>
-    setForm((f) => ({ ...f, [field]: e.target.value }));
+  const { loading } = useSelector((state) => state.auth);
+  const emailError = useMemo(() => {
+    if (!touched.email || email.length === 0) return "";
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? "" : "Enter a valid email address.";
+  }, [email, touched.email]);
 
-  const touch = (field) => () =>
-    setTouched((t) => ({ ...t, [field]: true }));
+  const passwordError = useMemo(() => {
+    if (!touched.password || password.length === 0) return "";
+    return password.length >= 8 ? "" : "Password must be at least 8 characters.";
+  }, [password, touched.password]);
 
-  const errors = useMemo(() => {
-    const e = {};
-    if ((touched.fullName || submitted) && !form.fullName.trim())
-      e.fullName = "Full name is required.";
-    if ((touched.email || submitted) && !form.email)
-      e.email = "Email address is required.";
-    else if ((touched.email || submitted) && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
-      e.email = "Enter a valid email address.";
-    if ((touched.password || submitted) && !form.password)
-      e.password = "Password is required.";
-    else if ((touched.password || submitted) && form.password.length < 8)
-      e.password = "Password must be at least 8 characters.";
-    if ((touched.confirmPassword || submitted) && !form.confirmPassword)
-      e.confirmPassword = "Please confirm your password.";
-    else if ((touched.confirmPassword || submitted) && form.confirmPassword !== form.password)
-      e.confirmPassword = "Passwords do not match.";
-    if ((touched.role || submitted) && !form.role)
-      e.role = "Please select a role.";
-    return e;
-  }, [form, touched, submitted]);
+  const confirmError = useMemo(() => {
+    if (!touched.confirm || confirmPassword.length === 0) return "";
+    return confirmPassword === password ? "" : "Passwords do not match.";
+  }, [confirmPassword, password, touched.confirm]);
+
+  /* ── Password rules for the hover checklist ── */
+  const passwordRules = useMemo(
+    () => [
+      { id: "length", label: "At least 8 characters", test: password.length >= 8 },
+      { id: "uppercase", label: "One uppercase letter (A-Z)", test: /[A-Z]/.test(password) },
+      { id: "lowercase", label: "One lowercase letter (a-z)", test: /[a-z]/.test(password) },
+      { id: "number", label: "One number (0-9)", test: /\d/.test(password) },
+      { id: "special", label: "One special character (!@#$%^&*)", test: /[!@#$%^&*(),.?":{}|<>_\-+=]/.test(password) },
+    ],
+    [password]
+  );
+
+  const handleBlur = (field) => setTouched((t) => ({ ...t, [field]: true }));
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSubmitted(true);
-    setApiError(null);
-    setTouched({ fullName: true, email: true, password: true, confirmPassword: true, role: true });
-    if (Object.keys(errors).length > 0) return;
+  e.preventDefault();
 
-    setIsLoading(true);
-    try {
-      // ── Backend integration point ──
-      // Replace with your actual API endpoint:
-      // const response = await fetch("/api/auth/signup", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({
-      //     fullName: form.fullName.trim(),
-      //     email: form.email.trim().toLowerCase(),
-      //     password: form.password,
-      //     role: form.role,
-      //   }),
-      // });
-      // if (!response.ok) {
-      //   const data = await response.json();
-      //   throw new Error(data.message || "Sign-up failed. Please try again.");
-      // }
-      // const data = await response.json();
-      // setSuccess(true);
-      // Redirect or store token: localStorage.setItem("token", data.token);
-
-      console.info("SignUp payload →", {
-        fullName: form.fullName.trim(),
-        email: form.email.trim().toLowerCase(),
-        password: form.password,
-        role: form.role,
-      });
-      setSuccess(true);
-    } catch (err) {
-      setApiError(err.message || "Something went wrong. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const passwordStrength = useMemo(() => {
-    const p = form.password;
-    if (!p) return 0;
-    let s = 0;
-    if (p.length >= 8)  s++;
-    if (/[A-Z]/.test(p)) s++;
-    if (/[0-9]/.test(p)) s++;
-    if (/[^A-Za-z0-9]/.test(p)) s++;
-    return s;
-  }, [form.password]);
-
-  const strengthLabel = ["", "Weak", "Fair", "Good", "Strong"][passwordStrength];
-  const strengthClass = ["", "su-str-weak", "su-str-fair", "su-str-good", "su-str-strong"][passwordStrength];
-
-  if (success) {
-    return (
-      <main className="su-page">
-        <section className="su-brand-panel" aria-labelledby="su-brand-title">
-          <nav className="su-topbar" aria-label="Sign up page navigation">
-            <a href="/" className="su-brand-mark" aria-label="Hackathon Portal home">
-              <span className="su-brand-icon">H</span>
-              <span>HackPortal</span>
-            </a>
-          </nav>
-          <div className="su-hero-copy">
-            <p className="su-eyebrow">Join the community</p>
-            <h1 id="su-brand-title" className="su-h1">Your next hack starts here.</h1>
-            <p className="su-supporting-copy">
-              Create your account, pick your role, and step into a world of hackathons, teams, and ideas waiting to be built.
-            </p>
-          </div>
-          <div className="su-showcase" aria-hidden="true">
-            <Mascot />
-            <div className="su-floating-card su-members-card">
-              <span className="su-status-dot" />
-              <div>
-                <strong>4,200+ members</strong>
-                <span>building right now</span>
-              </div>
-            </div>
-            <div className="su-floating-card su-events-card">
-              <strong>32</strong>
-              <span>open events</span>
-            </div>
-          </div>
-        </section>
-        <section className="su-auth-panel" aria-label="Success">
-          <div className="su-auth-card su-success-card">
-            <div className="su-success-icon">🎉</div>
-            <h2 className="su-success-title">You're in!</h2>
-            <p className="su-success-msg">
-              Welcome to HackPortal, <strong>{form.fullName.trim()}</strong>. Check your inbox for a verification link.
-            </p>
-            <a href="/login" className="su-submit-btn su-success-btn">
-              <span>Go to Sign In</span>
-              <ArrowIcon />
-            </a>
-          </div>
-        </section>
-      </main>
-    );
+  // Basic frontend validation
+  if (!fullName || !email || !password || !confirmPassword) {
+    toast.error("Please fill all fields.");
+    return;
   }
 
+  if (password !== confirmPassword) {
+    toast.error("Passwords do not match.");
+    return;
+  }
+
+  try {
+    const result = await dispatch(
+      signup({
+        fullName,
+        email,
+        password,
+        confirmPassword,
+        role,
+      })
+    ).unwrap();
+
+    toast.success(result.message || "Account created successfully!");
+
+    navigate("/login");
+  } catch (error) {
+    toast.error(error || "Signup failed.");
+  }
+};
+
+  const handleProviderLogin = (provider) => {
+    setSelectedProvider(provider);
+    console.info("OAuth provider selected", { provider });
+  };
+
   return (
-    <main className="su-page">
-      {/* ── Brand Panel (left) ── */}
-      <section className="su-brand-panel" aria-labelledby="su-brand-title">
-        <nav className="su-topbar" aria-label="Sign up page navigation">
-          <a href="/" className="su-brand-mark" aria-label="Hackathon Portal home">
-            <span className="su-brand-icon">H</span>
-            <span>HackPortal</span>
-          </a>
+    <main className="signup-page">
+      {/* ── Back to Home link — top of full page ── */}
+      <Link to="/" className="signup-back-link" aria-label="Back to Home">
+        <BackArrowIcon />
+        <span>Back to Home</span>
+      </Link>
+
+      {/* ── Brand Panel ── */}
+      <section className="signup-brand-panel" aria-labelledby="signup-brand-title">
+        <nav className="signup-topbar" aria-label="Signup page navigation">
+          <Link href="/" className="signup-brand-mark" aria-label="DevDash home">
+            <HexLogo />
+            <span>DevDash</span>
+          </Link>
         </nav>
 
-        <div className="su-hero-copy">
-          <p className="su-eyebrow">Join the community</p>
-          {/* ── FW-700, black heading ── */}
-          <h1 id="su-brand-title" className="su-h1">
-            Your next hack starts here.
+        <div className="signup-hero-copy">
+          <p className="signup-eyebrow">Build the future</p>
+          <h1 id="signup-brand-title" className="signup-h1">
+            Start your hacking journey.
           </h1>
-          <p className="su-supporting-copy">
-            Create your account, pick your role, and step into a world of hackathons, teams, and ideas waiting to be built.
+          <p className="signup-supporting-copy">
+            Create an account to join events, form teams, and submit your builds. Your workspace awaits.
           </p>
         </div>
 
-        <div className="su-showcase" aria-hidden="true">
+        <div className="signup-showcase" aria-hidden="true">
           <Mascot />
-          {/* Floating cards — always visible */}
-          <div className="su-floating-card su-members-card">
-            <span className="su-status-dot" />
-            <div>
-              <strong>4,200+ members</strong>
-              <span>building right now</span>
-            </div>
-          </div>
-          <div className="su-floating-card su-events-card">
-            <strong>32</strong>
-            <span>open events</span>
-          </div>
         </div>
       </section>
 
-      {/* ── Auth Panel (right) ── */}
-      <section className="su-auth-panel" aria-labelledby="su-form-title">
-        <div className="su-auth-card">
+      {/* ── Auth Panel ── */}
+      <section className="signup-auth-panel" aria-labelledby="signup-title">
+        <div className="signup-auth-card">
 
-          {/* Badge */}
-          <div className="su-auth-badge">
-            <ShieldCheckIcon />
-            <span>Create account</span>
+          <div className="signup-auth-badge">
+            <ShieldIcon />
+            Secure Signup
           </div>
 
-          {/* Heading */}
-          <div className="su-auth-heading">
-            <h2 id="su-form-title">Join HackPortal</h2>
-            <p>Fill in your details to get started in seconds.</p>
+          <div className="signup-auth-heading">
+            <h2 id="signup-title">Create an Account</h2>
+            <p>Fill in your details or use a developer account.</p>
           </div>
 
-          {/* API-level error banner */}
-          {apiError && (
-            <div className="su-api-error" role="alert">
-              <span>⚠️</span> {apiError}
-            </div>
-          )}
-
-          <form className="su-form" onSubmit={handleSubmit} noValidate>
-
-            {/* Full Name */}
-            <Field
-              label="Full name"
-              error={errors.fullName}
-              hint="Your display name shown to teammates."
-            >
-              <div className={`su-input-shell${errors.fullName ? " su-input-error" : ""}`}>
-                <UserIcon />
-                <input
-                  id="su-fullname"
-                  name="fullName"
-                  type="text"
-                  autoComplete="name"
-                  placeholder="Jane Doe"
-                  value={form.fullName}
-                  onChange={set("fullName")}
-                  onBlur={touch("fullName")}
-                  aria-invalid={Boolean(errors.fullName)}
-                  aria-describedby={errors.fullName ? "su-fullname-err" : undefined}
-                  disabled={isLoading}
-                />
-              </div>
-            </Field>
-
-            {/* Email */}
-            <Field
-              label="Email address"
-              error={errors.email}
-              hint="We'll send a verification link here."
-            >
-              <div className={`su-input-shell${errors.email ? " su-input-error" : ""}`}>
-                <MailIcon />
-                <input
-                  id="su-email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  placeholder="name@college.edu"
-                  value={form.email}
-                  onChange={set("email")}
-                  onBlur={touch("email")}
-                  aria-invalid={Boolean(errors.email)}
-                  disabled={isLoading}
-                />
-              </div>
-            </Field>
-
-            {/* Two-column row: Password + Confirm */}
-            <div className="su-pw-row">
-              {/* Password */}
-              <Field
-                label="Password"
-                badge="Min 8 chars"
-                error={errors.password}
+          {/* Provider buttons */}
+          <div className="signup-provider-grid">
+            {authProviders.map((provider) => (
+              <button
+                key={provider.id}
+                className={`signup-provider-button${selectedProvider === provider.id ? " is-selected" : ""}`}
+                type="button"
+                onClick={() => handleProviderLogin(provider.id)}
+                aria-pressed={selectedProvider === provider.id}
               >
-                <PasswordInput
-                  id="su-password"
-                  value={form.password}
-                  onChange={set("password")}
-                  onBlur={touch("password")}
-                  placeholder="Create a strong password"
-                  error={errors.password}
-                  autoComplete="new-password"
-                  disabled={isLoading}
-                />
-                {form.password && (
-                  <div className="su-strength-wrap" aria-label={`Password strength: ${strengthLabel}`}>
-                    <div className="su-strength-bar">
-                      {[1, 2, 3, 4].map((n) => (
-                        <span
-                          key={n}
-                          className={`su-strength-seg${passwordStrength >= n ? ` ${strengthClass}` : ""}`}
-                        />
-                      ))}
-                    </div>
-                    {strengthLabel && (
-                      <span className={`su-strength-label ${strengthClass}`}>{strengthLabel}</span>
-                    )}
-                  </div>
-                )}
-              </Field>
+                {provider.icon === "google" ? <GoogleIcon /> : <GitHubIcon />}
+                <span>{provider.label}</span>
+              </button>
+            ))}
+          </div>
+
+          <div className="signup-divider">
+            <span>or continue with email</span>
+          </div>
+
+          <form className="signup-form" onSubmit={handleSubmit} noValidate>
+
+            {/* Full Name + Email — side by side */}
+            <div className="signup-field-row">
+              {/* Full Name */}
+              <div className="signup-field-group">
+                <label htmlFor="signup-name">Full Name</label>
+                <div className="signup-input-shell">
+                  <UserIcon />
+                  <input
+                    id="signup-name"
+                    name="fullName"
+                    type="text"
+                    autoComplete="name"
+                    placeholder="John Doe"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    onBlur={() => handleBlur("name")}
+                  />
+                </div>
+              </div>
+
+              {/* Email */}
+              <div className="signup-field-group">
+                <label htmlFor="signup-email">Email address</label>
+                <div className={`signup-input-shell${emailError ? " input-error" : ""}`}>
+                  <MailIcon />
+                  <input
+                    id="signup-email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    placeholder="name@college.edu"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    onBlur={() => handleBlur("email")}
+                    aria-describedby={emailError ? "signup-email-error" : undefined}
+                    aria-invalid={Boolean(emailError)}
+                  />
+                </div>
+                {emailError && <p className="signup-field-error" id="signup-email-error">{emailError}</p>}
+              </div>
+            </div>
+
+            {/* Role selector — side by side */}
+            <div className="signup-field-row">
+              <div className="signup-field-group">
+                <label>Select your role:</label>
+                <div className="signup-role-grid">
+                  <label className={`signup-role-card${role === "judge" ? " is-selected" : ""}`}>
+                    <input
+                      type="radio"
+                      name="role"
+                      value="judge"
+                      checked={role === "judge"}
+                      onChange={() => setRole("judge")}
+                      className="signup-radio-hidden"
+                    />
+                    <span className="signup-radio-dot" aria-hidden="true" />
+                    <span className="signup-role-info">
+                      <span className="signup-role-name">Judge</span>
+                      <span className="signup-role-desc">Requires admin approval</span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+
+              <div className="signup-field-group">
+                <label className="signup-label-spacer" aria-hidden="true">&nbsp;</label>
+                <div className="signup-role-grid">
+                  <label className={`signup-role-card${role === "participant" ? " is-selected" : ""}`}>
+                    <input
+                      type="radio"
+                      name="role"
+                      value="participant"
+                      checked={role === "participant"}
+                      onChange={() => setRole("participant")}
+                      className="signup-radio-hidden"
+                    />
+                    <span className="signup-radio-dot" aria-hidden="true" />
+                    <span className="signup-role-info">
+                      <span className="signup-role-name">Participant</span>
+                      <span className="signup-role-desc">Join a team and build</span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            {/* Password + Confirm Password — side by side */}
+            <div className="signup-field-row">
+              {/* Password */}
+              <div
+                className="signup-field-group signup-password-field-group"
+                onMouseEnter={() => setShowPasswordRules(true)}
+                onMouseLeave={() => setShowPasswordRules(false)}
+              >
+                <label htmlFor="signup-password">Password</label>
+                <div className={`signup-input-shell${passwordError ? " input-error" : ""}`}>
+                  <LockIcon />
+                  <input
+                    id="signup-password"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    autoComplete="new-password"
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    onFocus={() => setShowPasswordRules(true)}
+                    onBlur={() => {
+                      handleBlur("password");
+                      setShowPasswordRules(false);
+                    }}
+                    aria-describedby={passwordError ? "signup-password-error" : "signup-password-rules"}
+                    aria-invalid={Boolean(passwordError)}
+                  />
+                  <button
+                    type="button"
+                    className="signup-eye-toggle"
+                    onClick={() => setShowPassword((v) => !v)}
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? <EyeIcon /> : <EyeOffIcon />}
+                  </button>
+                </div>
+                {passwordError && <p className="signup-field-error" id="signup-password-error">{passwordError}</p>}
+
+                {/* Password rules checklist — shows on hover/focus of the password field */}
+                <div
+                  id="signup-password-rules"
+                  className={`signup-password-rules${showPasswordRules ? " is-visible" : ""}`}
+                  role="tooltip"
+                >
+                  <p className="signup-password-rules-title">Password must contain:</p>
+                  <ul>
+                    {passwordRules.map((rule) => (
+                      <li key={rule.id} className={rule.test ? "is-met" : ""}>
+                        <span className="signup-rule-check" aria-hidden="true">
+                          {rule.test ? "✓" : ""}
+                        </span>
+                        {rule.label}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
 
               {/* Confirm Password */}
-              <Field
-                label="Confirm password"
-                error={errors.confirmPassword}
-              >
-                <PasswordInput
-                  id="su-confirm-password"
-                  value={form.confirmPassword}
-                  onChange={set("confirmPassword")}
-                  onBlur={touch("confirmPassword")}
-                  placeholder="Re-enter your password"
-                  error={errors.confirmPassword}
-                  autoComplete="new-password"
-                  disabled={isLoading}
-                />
-              </Field>
-            </div>
-
-            {/* Role */}
-            <Field
-              label="Your role"
-              error={errors.role}
-              hint="You can change this later from your profile."
-            >
-              <div className="su-role-grid">
-                {ROLES.map((r) => (
+              <div className="signup-field-group">
+                <label htmlFor="signup-confirm">Confirm Password</label>
+                <div className={`signup-input-shell${confirmError ? " input-error" : ""}`}>
+                  <LockIcon />
+                  <input
+                    id="signup-confirm"
+                    name="confirmPassword"
+                    type={showConfirm ? "text" : "password"}
+                    autoComplete="new-password"
+                    placeholder="Repeat your password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    onBlur={() => handleBlur("confirm")}
+                    aria-describedby={confirmError ? "signup-confirm-error" : undefined}
+                    aria-invalid={Boolean(confirmError)}
+                  />
                   <button
-                    key={r.id}
                     type="button"
-                    className={`su-role-btn${form.role === r.id ? " su-role-btn--active" : ""}`}
-                    onClick={() => {
-                      setForm((f) => ({ ...f, role: r.id }));
-                      touch("role")();
-                    }}
-                    aria-pressed={form.role === r.id}
-                    disabled={isLoading}
+                    className="signup-eye-toggle"
+                    onClick={() => setShowConfirm((v) => !v)}
+                    aria-label={showConfirm ? "Hide password" : "Show password"}
                   >
-                    <span className="su-role-emoji">{r.emoji}</span>
-                    <span className="su-role-label">{r.label}</span>
-                    {form.role === r.id && <span className="su-role-dot" />}
+                    {showConfirm ? <EyeIcon /> : <EyeOffIcon />}
                   </button>
-                ))}
+                </div>
+                {confirmError && <p className="signup-field-error" id="signup-confirm-error">{confirmError}</p>}
               </div>
-            </Field>
+            </div>
 
             {/* Submit */}
             <button
-              className="su-submit-btn"
-              type="submit"
-              disabled={isLoading}
-              aria-busy={isLoading}
-            >
-              {isLoading ? (
-                <span className="su-spinner" aria-label="Creating account…" />
-              ) : (
-                <>
-                  <span>Create my account</span>
-                  <ArrowIcon />
-                </>
-              )}
+  className="signup-submit-button"
+  type="submit"
+  disabled={loading}
+>
+              <span>
+  {loading ? "Creating Account..." : "Create Account"}
+</span>
+              <ArrowIcon />
             </button>
           </form>
 
-          <p className="su-footer-copy">
-            Already have an account?{" "}
-            <a href="/login" className="su-footer-link">Sign in</a>
+          <p className="signup-login-copy">
+            Already have an account? <Link to="/login" className="signup-login-link">
+  Login
+</Link>
           </p>
 
-          <p className="su-terms-copy">
-            By signing up you agree to our{" "}
-            <a href="/terms" className="su-terms-link">terms of service</a> and{" "}
-            <a href="/privacy" className="su-terms-link">privacy policy</a>.
-          </p>
         </div>
       </section>
     </main>
   );
 }
 
-export default SignUp;
+export default Signup;
