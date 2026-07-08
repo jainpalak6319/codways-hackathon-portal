@@ -1,10 +1,14 @@
 import { useMemo, useState } from "react";
-import "./Login.css";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
+import "./Login.css";
+import { login } from "../../features/auth/authSlice";
 /* ── Auth providers ── */
 const authProviders = [
-  { id: "google", label: "Google", icon: "google" },
-  { id: "github", label: "GitHub",  icon: "github" },
+  { id: "google", label: "Continue with Google", icon: "google" },
+  { id: "github", label: "Continue with GitHub", icon: "github" },
 ];
 
 /* ── Icons ── */
@@ -45,6 +49,32 @@ function MailIcon() {
   );
 }
 
+function LockIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="login-input-icon">
+      <rect x="5" y="11" width="14" height="10" rx="2" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M8 11V7a4 4 0 0 1 8 0v4" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function EyeOffIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="login-eye-icon">
+      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24M1 1l22 22" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function EyeIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="login-eye-icon">
+      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" strokeWidth="1.7" />
+    </svg>
+  );
+}
+
 function ArrowIcon() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" className="login-arrow-icon">
@@ -55,6 +85,41 @@ function ArrowIcon() {
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="2"
+      />
+    </svg>
+  );
+}
+
+function ShieldIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="login-badge-icon">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M9 12l2 2 4-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+/* ── DevDash Hexagon Logo — thick teal outlined outer hex + hollow inner hex ── */
+function HexLogo() {
+  return (
+    <svg viewBox="0 0 40 40" aria-hidden="true" className="login-hex-logo">
+      <defs>
+        <mask id="hole">
+          {/* Everything white stays visible */}
+          <rect width="100%" height="100%" fill="white" />
+          {/* Everything black cuts a hole */}
+          <polygon
+            points="20,10 30,15.5 30,24.5 20,30 10,24.5 10,15.5"
+            fill="black"
+          />
+        </mask>
+      </defs>
+
+      {/* Outer hexagon with the mask applied */}
+      <polygon
+        points="20,1 37,10.5 37,29.5 20,39 3,29.5 3,10.5"
+        fill="#0fa898"
+        mask="url(#hole)"
       />
     </svg>
   );
@@ -119,21 +184,61 @@ function Mascot() {
 /* ── Main Login Component ── */
 function Login() {
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const [touched, setTouched] = useState(false);
   const [selectedProvider, setSelectedProvider] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
+  const { loading } = useSelector((state) => state.auth);
   const emailError = useMemo(() => {
     if (!touched || email.length === 0) return "";
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? "" : "Enter a valid email address.";
   }, [email, touched]);
 
-  const handleEmailSubmit = (e) => {
-    e.preventDefault();
-    setTouched(true);
-    if (!email || emailError) return;
-    console.info("Email auth requested", { email });
-  };
+  
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
+  if (!email || !password) {
+    toast.error("Please enter email and password.");
+    return;
+  }
+
+  try {
+    const result = await dispatch(
+      login({
+        email,
+        password,
+      })
+    ).unwrap();
+
+    toast.success(result.message || "Login successful");
+
+    const role = result.data.role;
+
+    switch (role) {
+      case "participant":
+        navigate("/participant/dashboard");
+        break;
+
+      case "judge":
+        navigate("/judge/dashboard");
+        break;
+
+      case "admin":
+        navigate("/admin/dashboard");
+        break;
+
+      default:
+        navigate("/");
+    }
+  } catch (error) {
+    toast.error(error || "Login failed.");
+  }
+};
   const handleProviderLogin = (provider) => {
     setSelectedProvider(provider);
     console.info("OAuth provider selected", { provider });
@@ -141,13 +246,19 @@ function Login() {
 
   return (
     <main className="login-page">
+      {/* ── Top-right sign up link (full page level) ── */}
+      <div className="login-signup-bar">
+        <span>New to HackPortal?</span>
+        <Link to="/signup" className="login-signup-link">Sign up</Link>
+      </div>
+
       {/* ── Brand Panel ── */}
       <section className="login-brand-panel" aria-labelledby="login-brand-title">
         <nav className="login-topbar" aria-label="Login page navigation">
-          <a href="/" className="login-brand-mark" aria-label="Hackathon Portal home">
-            <span className="login-brand-icon">H</span>
-            <span>HackPortal</span>
-          </a>
+          <Link to="/" className="login-brand-mark" aria-label="DevDash home">
+            <HexLogo />
+            <span>DevDash</span>
+          </Link>
         </nav>
 
         <div className="login-hero-copy">
@@ -162,24 +273,16 @@ function Login() {
 
         <div className="login-showcase" aria-hidden="true">
           <Mascot />
-          <div className="login-floating-card login-schedule-card">
-            <span className="login-status-dot" />
-            <div>
-              <strong>Live round</strong>
-              <span>12:40 left</span>
-            </div>
-          </div>
-          <div className="login-floating-card login-score-card">
-            <strong>96</strong>
-            <span>ideas shipped</span>
-          </div>
         </div>
       </section>
 
       {/* ── Auth Panel ── */}
       <section className="login-auth-panel" aria-labelledby="login-title">
         <div className="login-auth-card">
-          <div className="login-auth-badge">Secure login</div>
+          <div className="login-auth-badge">
+            <ShieldIcon />
+            Secure Login
+          </div>
 
           <div className="login-auth-heading">
             <h2 id="login-title">Welcome back</h2>
@@ -202,15 +305,13 @@ function Login() {
           </div>
 
           <div className="login-divider">
-            <span>Email login</span>
+            <span>or continue with email</span>
           </div>
 
-          <form className="login-email-form" onSubmit={handleEmailSubmit} noValidate>
-            <div className="login-email-box">
-              <div className="login-email-label-row">
-                <label htmlFor="login-email">Email address</label>
-                <span>Magic link</span>
-              </div>
+          <form className="login-email-form" onSubmit={handleSubmit} noValidate>
+            {/* Email field */}
+            <div className="login-field-group">
+              <label htmlFor="login-email">Email address</label>
               <div className={`login-input-shell${emailError ? " input-error" : ""}`}>
                 <MailIcon />
                 <input
@@ -226,25 +327,71 @@ function Login() {
                   aria-invalid={Boolean(emailError)}
                 />
               </div>
-              {emailError ? (
+              {emailError && (
                 <p className="login-field-error" id="login-email-error">
                   {emailError}
-                </p>
-              ) : (
-                <p className="login-field-hint">
-                  We will send a secure sign-in link to this inbox.
                 </p>
               )}
             </div>
 
-            <button className="login-submit-button" type="submit">
-              <span>Send login link</span>
+            {/* Password field */}
+            <div className="login-field-group">
+              <label htmlFor="login-password">Password</label>
+              <div className="login-input-shell">
+                <LockIcon />
+                <input
+                  id="login-password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="current-password"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <button
+                  type="button"
+                  className="login-eye-toggle"
+                  onClick={() => setShowPassword((v) => !v)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeIcon /> : <EyeOffIcon />}
+                </button>
+              </div>
+            </div>
+
+            {/* Remember me + Forgot password */}
+            <div className="login-row-options">
+              <label className="login-remember-label">
+                <input
+                  type="checkbox"
+                  className="login-checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                />
+                <span>Remember me</span>
+              </label>
+              <Link to="/forgot-password" className="login-forgot-link">Forgot password?</Link>
+            </div>
+
+            <button
+  className="login-submit-button"
+  type="submit"
+  disabled={loading}
+>
+              <span>
+  {loading ? "Logging in..." : "Login"}
+</span>
               <ArrowIcon />
             </button>
           </form>
 
+          {/* Terms — single clean line */}
           <p className="login-terms-copy">
-            By continuing, you agree to the terms and privacy policy.
+            <svg viewBox="0 0 24 24" aria-hidden="true" className="login-lock-small">
+              <rect x="5" y="11" width="14" height="10" rx="2" fill="none" stroke="currentColor" strokeWidth="1.6" />
+              <path d="M8 11V7a4 4 0 0 1 8 0v4" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+            </svg>
+            By continuing, you agree to the <Link to="/terms">Terms of Service</Link> and <Link TO="/privacy">Privacy Policy</Link>.
           </p>
         </div>
       </section>

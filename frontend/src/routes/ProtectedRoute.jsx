@@ -1,17 +1,27 @@
 import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-function ProtectedRoute({ children }) {
-  const auth = useSelector((state) => state.auth);
+const ProtectedRoute = ({ children, allowedRoles = [] }) => {
+  const { user, isAuthenticated, loading } = useSelector(
+    (state) => state.auth
+  );
 
-  console.log("ProtectedRoute Auth:", auth);
+  if (loading) {
+    return <h2 style={{ textAlign: "center" }}>Loading...</h2>;
+  }
 
-  if (!auth.isAuthenticated) {
-    console.log("Redirecting to login");
+  if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 
+  if (
+    allowedRoles.length > 0 &&
+    !allowedRoles.includes(user.role)
+  ) {
+    return <Navigate to="/unauthorized" replace />;
+  }
+
   return children;
-}
+};
 
 export default ProtectedRoute;

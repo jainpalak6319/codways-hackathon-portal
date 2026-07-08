@@ -1,46 +1,29 @@
-import { useDispatch, useSelector } from "react-redux";
-import { loginSuccess } from "../../features/auth/authSlice";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 function Home() {
-  const dispatch = useDispatch();
-
   const auth = useSelector((state) => state.auth);
+
   console.log("Home Auth State:", auth);
-  const handleLogin = () => {
-    dispatch(
-      loginSuccess({
-        user: {
-          name: "Palak",
-          role: "admin",
-        },
-        token: "dummy_token",
-      })
-    );
-  };
 
   return (
     <div className="container mt-5">
-      <h1>Redux Test</h1>
+      <h1>Hackathon Management Portal</h1>
 
-      <button
-        className="btn btn-primary"
-        onClick={handleLogin}
-      >
-        Test Login
-      </button>
+      <h5 className="mt-4">Redux Auth State</h5>
 
       <pre>{JSON.stringify(auth, null, 2)}</pre>
-      <Link
-  to="/admin/dashboard"
-  className="btn btn-success ms-3"
->
-  Go To Admin Dashboard
-</Link>
+
+      <div className="mt-4">
+        <Link to="/login" className="btn btn-primary me-2">
+          Login
+        </Link>
+
+        <Link to="/signup" className="btn btn-success">
+          Signup
+        </Link>
+      </div>
     </div>
-    
-
-
   );
 }
 
