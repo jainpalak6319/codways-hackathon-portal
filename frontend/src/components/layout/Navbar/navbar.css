@@ -1,0 +1,178 @@
+/* =========================
+   NAVBAR
+========================= */
+
+.navbar {
+  width: 100%;
+  background-color: #051329;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 20px clamp(20px, 6vw, 80px);
+}
+
+/* =========================
+   LOGO
+========================= */
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.navbar-brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.brand-name {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+}
+
+.brand-tagline {
+  font-size: 0.7rem;
+  color: #94a3b8;
+  font-weight: 400;
+}
+
+/* =========================
+   NAV LINKS
+========================= */
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  gap: 30px;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-links li {
+  list-style: none;
+}
+
+.navbar-links a {
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+  position: relative;
+  padding-bottom: 4px;
+}
+
+.navbar-links a:hover,
+.navbar-links a.active {
+  color: #00b4a2;
+}
+
+.navbar-links a.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background: #00b4a2;
+  border-radius: 10px;
+}
+
+/* =========================
+   AUTH BUTTONS
+========================= */
+
+.navbar-auth {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Common Button Style */
+
+.btn-login,
+.btn-signup {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  cursor: pointer;
+  padding: 8px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+/* Login */
+
+.btn-login {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+.btn-login:hover {
+  border-color: #00b4a2;
+  color: #00b4a2;
+}
+
+/* Signup */
+
+.btn-signup {
+  background: #00b4a2;
+  color: #051329;
+}
+
+.btn-signup:hover {
+  background: #00d2c4;
+  transform: translateY(-1px);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 900px) {
+  .navbar-inner {
+    padding: 16px 20px;
+  }
+
+  .navbar-links {
+    display: none;
+  }
+
+  .navbar-auth {
+    gap: 10px;
+  }
+}
+
+@media (max-width: 500px) {
+  .btn-login {
+    display: none;
+  }
+
+  .brand-tagline {
+    display: none;
+  }
+
+  .navbar-inner {
+    padding: 14px 16px;
+  }
+}

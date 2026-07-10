@@ -1,30 +1,28 @@
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import React from 'react';
 
-function Home() {
-  const auth = useSelector((state) => state.auth);
+import Hero from '../../components/home/Hero';
+import SearchBar from '../../components/home/SearchBar';
+import FeaturedHackathons from '../../components/home/FeaturedHackathons';
+import Stats from '../../components/home/Stats';
+import ProcessTimeline from '../../components/home/ProcessTimeline';
+import Benefits from '../../components/home/Benefits';
 
-  console.log("Home Auth State:", auth);
-
+const Home = () => {
   return (
-    <div className="container mt-5">
-      <h1>Hackathon Management Portal</h1>
-
-      <h5 className="mt-4">Redux Auth State</h5>
-
-      <pre>{JSON.stringify(auth, null, 2)}</pre>
-
-      <div className="mt-4">
-        <Link to="/login" className="btn btn-primary me-2">
-          Login
-        </Link>
-
-        <Link to="/signup" className="btn btn-success">
-          Signup
-        </Link>
+    <div className="homepage-wrapper" style={{ backgroundColor: '#f8fafc', minHeight: '100vh' }}>
+      
+      <Hero />
+      <div className="main-content-container" style={{ position: 'relative', marginTop: '-60px', zIndex: 10 }}>
+        <SearchBar />
+        <FeaturedHackathons />
+        <Stats />
+        <ProcessTimeline />
+        <Benefits />
       </div>
+     
     </div>
   );
-}
+};
 
 export default Home;
+
