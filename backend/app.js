@@ -3,6 +3,9 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
+import passport from "passport";
+import "./config/passport.js";
+
 import authRoutes from "./routes/auth.routes.js";
 import errorHandler from "./middleware/error.middleware.js";
 const app = express();
@@ -27,6 +30,9 @@ app.use(express.urlencoded({ extended: true }));
 // Parse Cookies
 app.use(cookieParser());
 
+
+// Initialize Passport
+app.use(passport.initialize());
 // Logger
 app.use(morgan("dev"));
 app.use("/api/auth", authRoutes);

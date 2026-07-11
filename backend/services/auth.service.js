@@ -70,6 +70,31 @@ export const loginUser = async ({ email, password }) => {
     },
   };
 };
+export const googleLogin = async (user) => {
+  // Judge approval check
+  if (user.role === "judge" && user.status !== "approved") {
+    throw new ApiError(
+      403,
+      "Your account is awaiting admin approval."
+    );
+  }
+
+  const token = generateToken(user);
+
+  return {
+    token,
+    user: {
+      id: user._id,
+      fullName: user.fullName,
+      email: user.email,
+      role: user.role,
+      status: user.status,
+      provider: user.provider,
+      avatar: user.avatar,
+      isVerified: user.isVerified,
+    },
+  };
+};
 export const getCurrentUser = async (userId) => {
   const user = await User.findById(userId);
 
