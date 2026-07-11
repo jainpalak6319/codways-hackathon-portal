@@ -47,7 +47,15 @@ const userSchema = new mongoose.Schema(
       enum: ["local", "google", "github"],
       default: "local",
     },
+    googleId: {
+  type: String,
+  default: "",
+},
 
+githubId: {
+  type: String,
+  default: "",
+},
     avatar: {
       type: String,
       default: "",

@@ -240,9 +240,18 @@ const handleSubmit = async (e) => {
   }
 };
   const handleProviderLogin = (provider) => {
-    setSelectedProvider(provider);
-    console.info("OAuth provider selected", { provider });
-  };
+  setSelectedProvider(provider);
+
+  if (provider === "google") {
+    window.location.href =
+      "http://localhost:5000/api/auth/google";
+  }
+
+  if (provider === "github") {
+    window.location.href =
+      "http://localhost:5000/api/auth/github";
+  }
+};
 
   return (
     <main className="login-page">
