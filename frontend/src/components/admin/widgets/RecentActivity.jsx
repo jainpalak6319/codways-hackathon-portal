@@ -21,7 +21,7 @@ export default function RecentActivity({ activity = [] }) {
     <div className="section-card h-100">
       <div className="section-card-header">
         <span className="section-card-title">Recent Activities</span>
-        <span className="link-teal" role="button" onClick={() => navigate('/reports')}>View All</span>
+        <span className="link-teal" role="button" onClick={() => navigate('/admin/reports')}>View All</span>
       </div>
       {!activity.length ? (
         <EmptyState title="No recent activity" />

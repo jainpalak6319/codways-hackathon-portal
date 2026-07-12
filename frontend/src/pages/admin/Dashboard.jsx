@@ -41,7 +41,7 @@ export default function Dashboard() {
           <div className="section-card h-100">
             <div className="section-card-header">
               <span className="section-card-title">Hackathons Overview</span>
-              <span className="link-teal" role="button" onClick={() => navigate('/hackathons')}>View All Hackathons</span>
+              <span className="link-teal" role="button" onClick={() => navigate('/admin/hackathons')}>View All Hackathons</span>
             </div>
             <HackathonTable hackathons={data?.hackathons || []} />
           </div>

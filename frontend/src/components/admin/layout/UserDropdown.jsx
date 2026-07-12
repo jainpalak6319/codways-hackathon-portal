@@ -49,7 +49,7 @@ export default function UserDropdown() {
     >
       <div
         className="dd-menu-item"
-        onClick={() => navigate("/admin/profile")}
+        onClick={() => navigate("/admin/settings")}
       >
         <MdOutlinePerson />
         My Profile

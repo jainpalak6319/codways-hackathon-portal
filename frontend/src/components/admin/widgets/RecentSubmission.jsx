@@ -12,7 +12,7 @@ export default function RecentSubmission({ submissions = [] }) {
     <div className="section-card h-100">
       <div className="section-card-header">
         <span className="section-card-title">Recent Submissions</span>
-        <span className="link-teal" role="button" onClick={() => navigate('/submissions')}>View All</span>
+        <span className="link-teal" role="button" onClick={() => navigate('/admin/submissions')}>View All</span>
       </div>
       {!submissions.length ? (
         <EmptyState title="No submissions yet" />
@@ -21,7 +21,7 @@ export default function RecentSubmission({ submissions = [] }) {
           {submissions.map((s) => (
             <div
               key={s.id}
-              onClick={() => navigate('/submissions')}
+              onClick={() => navigate('/admin/submissions')}
               role="button"
               style={{ display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer' }}
             >
