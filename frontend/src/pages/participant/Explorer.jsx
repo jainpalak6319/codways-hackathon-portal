@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 const ExplorerPage = () => {
   const navigate = useNavigate();
-  
+
   // State to hold the user's search input
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -18,7 +18,7 @@ const ExplorerPage = () => {
       location: "Online",
       team: "2-4",
       prize: "$10,000",
-      statusColor: "text-[#00C2B2] bg-[#00C2B2]/10 border-[#00C2B2]/20"
+      statusTheme: { color: "#00C2B2", backgroundColor: "rgba(0, 194, 178, 0.1)", borderColor: "rgba(0, 194, 178, 0.2)" }
     },
     {
       id: 2,
@@ -29,7 +29,7 @@ const ExplorerPage = () => {
       location: "Geeta University, Panipat",
       team: "1-4",
       prize: "₹50,000",
-      statusColor: "text-[#8B5CF6] bg-[#8B5CF6]/10 border-[#8B5CF6]/20" 
+      statusTheme: { color: "#8B5CF6", backgroundColor: "rgba(139, 92, 246, 0.1)", borderColor: "rgba(139, 92, 246, 0.2)" }
     },
     {
       id: 3,
@@ -40,7 +40,7 @@ const ExplorerPage = () => {
       location: "Hybrid (Delhi/Online)",
       team: "3-5",
       prize: "₹1,00,000",
-      statusColor: "text-[#3B82F6] bg-[#3B82F6]/10 border-[#3B82F6]/20" 
+      statusTheme: { color: "#3B82F6", backgroundColor: "rgba(59, 130, 246, 0.1)", borderColor: "rgba(59, 130, 246, 0.2)" }
     },
     {
       id: 4,
@@ -51,7 +51,7 @@ const ExplorerPage = () => {
       location: "Online",
       team: "2-5",
       prize: "₹75,000",
-      statusColor: "text-[#3B82F6] bg-[#3B82F6]/10 border-[#3B82F6]/20"
+      statusTheme: { color: "#3B82F6", backgroundColor: "rgba(59, 130, 246, 0.1)", borderColor: "rgba(59, 130, 246, 0.2)" }
     },
     {
       id: 5,
@@ -62,7 +62,7 @@ const ExplorerPage = () => {
       location: "Hybrid",
       team: "3-4",
       prize: "₹60,000",
-      statusColor: "text-[#8B5CF6] bg-[#8B5CF6]/10 border-[#8B5CF6]/20"
+      statusTheme: { color: "#8B5CF6", backgroundColor: "rgba(139, 92, 246, 0.1)", borderColor: "rgba(139, 92, 246, 0.2)" }
     },
     {
       id: 6,
@@ -73,11 +73,11 @@ const ExplorerPage = () => {
       location: "Online",
       team: "1-3",
       prize: "$5,000",
-      statusColor: "text-[#00C2B2] bg-[#00C2B2]/10 border-[#00C2B2]/20"
+      statusTheme: { color: "#00C2B2", backgroundColor: "rgba(0, 194, 178, 0.1)", borderColor: "rgba(0, 194, 178, 0.2)" }
     }
   ];
 
-  // Filter logic: Check if the title or any tag matches the search query (case-insensitive)
+  // Filter logic
   const filteredHackathons = hackathons.filter((hack) => {
     const query = searchQuery.toLowerCase();
     const matchesTitle = hack.title.toLowerCase().includes(query);
@@ -87,97 +87,239 @@ const ExplorerPage = () => {
   });
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6 md:space-y-8 pb-10 selection:bg-[#00C2B2]/30 selection:text-[#0A1220]">
-      
-      {/* Header Section */}
-      <div className="px-2 md:px-0">
-        <h1 className="text-2xl md:text-3xl font-bold text-[#0A1220] tracking-tight">Hackathon Explorer</h1>
-        <p className="text-[#7A8A9E] mt-1.5 text-sm md:text-base font-medium">Discover and register for upcoming events and coding sprints.</p>
-      </div>
+    <>
+      <style>
+        {`
+          /* Custom Selection Color */
+          .explorer-page ::selection {
+            background-color: rgba(0, 194, 178, 0.3);
+            color: #0A1220;
+          }
 
-      {/* Search and Filter Bar */}
-      <div className="flex flex-col sm:flex-row gap-3 md:gap-4 px-2 md:px-0">
-        <div className="relative flex-1">
-          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#7A8A9E]" size={20} />
-          <input 
-            type="text" 
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search by hackathon name, tech stack, or theme..." 
-            className="w-full pl-11 pr-4 py-3.5 bg-white border border-[#E2E8F0] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00C2B2]/20 focus:border-[#00C2B2] transition-all text-[#0A1220] font-medium placeholder-[#7A8A9E]/60 shadow-sm"
-          />
+          /* Search Input Styling */
+          .search-input-wrapper .lucide {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7A8A9E;
+          }
+          .custom-search-input {
+            padding-left: 2.75rem !important;
+            padding-top: 0.875rem !important;
+            padding-bottom: 0.875rem !important;
+            border: 1px solid #E2E8F0;
+            border-radius: 0.75rem;
+            color: #0A1220;
+            font-weight: 500;
+            transition: all 0.3s ease;
+          }
+          .custom-search-input::placeholder {
+            color: rgba(122, 138, 158, 0.6);
+          }
+          .custom-search-input:focus {
+            border-color: #00C2B2;
+            box-shadow: 0 0 0 4px rgba(0, 194, 178, 0.15);
+            outline: none;
+          }
+
+          /* Filter Button */
+          .btn-custom-filter {
+            background-color: #ffffff;
+            border: 1px solid #E2E8F0;
+            color: #0A1220;
+            font-weight: 500;
+            border-radius: 0.75rem;
+            transition: all 0.3s ease;
+          }
+          .btn-custom-filter:hover {
+            background-color: #F8FAFC;
+            border-color: #CBD5E1;
+          }
+          .btn-custom-filter .lucide {
+            color: #7A8A9E;
+            transition: color 0.3s ease;
+          }
+          .btn-custom-filter:hover .lucide {
+            color: #0A1220;
+          }
+
+          /* Hackathon Card Styling */
+          .hackathon-card {
+            background-color: #ffffff;
+            border: 1px solid #E2E8F0;
+            border-radius: 1rem;
+            transition: all 0.3s ease;
+          }
+          .hackathon-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.04);
+            border-color: rgba(0, 194, 178, 0.3);
+          }
+          .hackathon-card-title {
+            color: #0A1220;
+            transition: color 0.3s ease;
+          }
+          .hackathon-card:hover .hackathon-card-title {
+            color: #00C2B2;
+          }
+
+          /* Card Badges */
+          .custom-badge {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.5rem;
+          }
+          
+          /* Card Details */
+          .detail-row {
+            font-size: 14px;
+            font-weight: 500;
+            color: #7A8A9E;
+          }
+          .detail-row .lucide {
+            color: #4F627D;
+          }
+
+          /* Action Button */
+          .btn-view-details {
+            border: 1px solid #E2E8F0;
+            color: #0A1220;
+            font-weight: 500;
+            border-radius: 0.75rem;
+            transition: all 0.3s ease;
+          }
+          .btn-view-details .lucide {
+            transition: transform 0.3s ease;
+          }
+          .btn-view-details:hover {
+            background-color: #00C2B2;
+            color: #ffffff;
+            border-color: #00C2B2;
+          }
+          .btn-view-details:hover .lucide {
+            transform: translateX(4px);
+          }
+        `}
+      </style>
+
+      <div className="container-xl explorer-page pb-5">
+        
+        {/* Header Section */}
+        <div className="mb-4">
+          <h1 className="fw-bold tracking-tight mb-2" style={{ color: '#0A1220', fontSize: '1.75rem' }}>
+            Hackathon Explorer
+          </h1>
+          <p className="fw-medium m-0" style={{ color: '#7A8A9E', fontSize: '1rem' }}>
+            Discover and register for upcoming events and coding sprints.
+          </p>
         </div>
-        <button className="flex items-center justify-center gap-2 px-6 py-3.5 bg-white border border-[#E2E8F0] rounded-xl text-[#0A1220] font-medium hover:bg-[#F8FAFC] hover:border-[#CBD5E1] transition-all shadow-sm group whitespace-nowrap">
-          <Filter size={18} className="text-[#7A8A9E] group-hover:text-[#0A1220] transition-colors" />
-          Filters
-        </button>
-      </div>
 
-      {/* Hackathon Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 px-2 md:px-0">
-        {filteredHackathons.length > 0 ? (
-          filteredHackathons.map((hack) => (
-            <div 
-              key={hack.id} 
-              className="bg-white border border-[#E2E8F0] rounded-2xl p-6 shadow-sm hover:shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:-translate-y-1 hover:border-[#00C2B2]/30 transition-all duration-300 flex flex-col group"
-            >
-              {/* Badges */}
-              <div className="flex flex-wrap gap-2 mb-5">
-                <span className={`px-3 py-1 text-[11px] font-semibold uppercase tracking-wider rounded-lg border ${hack.statusColor}`}>
-                  {hack.status}
-                </span>
-                {hack.tags.map(tag => (
-                  <span key={tag} className="px-3 py-1 text-[11px] font-medium uppercase tracking-wider rounded-lg border border-[#E2E8F0] text-[#4F627D] bg-[#F8FAFC]">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-
-              {/* Title */}
-              <h2 className="text-xl font-bold text-[#0A1220] mb-5 group-hover:text-[#00C2B2] transition-colors leading-tight">
-                {hack.title}
-              </h2>
-
-              {/* Details List */}
-              <div className="space-y-3.5 mb-8 flex-1">
-                <div className="flex items-center gap-3 text-[#7A8A9E] text-[14px] font-medium">
-                  <Calendar size={18} className="text-[#4F627D]" />
-                  <span>{hack.date}</span>
-                </div>
-                <div className="flex items-center gap-3 text-[#7A8A9E] text-[14px] font-medium">
-                  <MapPin size={18} className="text-[#4F627D]" />
-                  <span className="truncate">{hack.location}</span>
-                </div>
-                <div className="flex items-center gap-3 text-[#7A8A9E] text-[14px] font-medium">
-                  <Users size={18} className="text-[#4F627D]" />
-                  <span>Team Size: {hack.team}</span>
-                </div>
-                <div className="flex items-center gap-3 text-[#0A1220] text-[14px] font-semibold">
-                  <Trophy size={18} className="text-amber-500" />
-                  <span>Prize: {hack.prize}</span>
-                </div>
-              </div>
-
-              {/* Action Button - Configured to Navigate */}
-              <button 
-                onClick={() => navigate(`/student/hackathon/${hack.id}`)}
-                className="w-full py-3.5 flex items-center justify-center gap-2 border border-[#E2E8F0] rounded-xl text-[#0A1220] font-medium hover:bg-[#00C2B2] hover:text-white hover:border-[#00C2B2] transition-all duration-300 group/btn"
-              >
-                View Details
-                <ArrowRight size={18} className="transition-transform duration-300 group-hover/btn:translate-x-1" />
-              </button>
-            </div>
-          ))
-        ) : (
-          /* Empty State when no results match */
-          <div className="col-span-full flex flex-col items-center justify-center py-16 px-4 text-center border-2 border-dashed border-[#E2E8F0] rounded-2xl bg-white">
-            <Search size={40} className="text-[#CBD5E1] mb-4" />
-            <h3 className="text-lg font-bold text-[#0A1220] mb-2">No hackathons found</h3>
-            <p className="text-[#7A8A9E] font-medium">We couldn't find any results matching "{searchQuery}". Try adjusting your search.</p>
+        {/* Search and Filter Bar */}
+        <div className="d-flex flex-column flex-sm-row gap-3 mb-4">
+          <div className="position-relative flex-grow-1 search-input-wrapper shadow-sm rounded-3">
+            <Search size={20} />
+            <input 
+              type="text" 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search by hackathon name, tech stack, or theme..." 
+              className="form-control custom-search-input w-100"
+            />
           </div>
-        )}
+          <button className="btn btn-custom-filter d-flex align-items-center justify-content-center gap-2 px-4 shadow-sm text-nowrap">
+            <Filter size={18} />
+            Filters
+          </button>
+        </div>
+
+        {/* Hackathon Cards Grid */}
+        <div className="row g-4">
+          {filteredHackathons.length > 0 ? (
+            filteredHackathons.map((hack) => (
+              <div key={hack.id} className="col-12 col-md-6 col-lg-4">
+                <div className="hackathon-card p-4 h-100 d-flex flex-column shadow-sm">
+                  
+                  {/* Badges */}
+                  <div className="d-flex flex-wrap gap-2 mb-4">
+                    <span 
+                      className="custom-badge border" 
+                      style={{ 
+                        color: hack.statusTheme.color, 
+                        backgroundColor: hack.statusTheme.backgroundColor, 
+                        borderColor: hack.statusTheme.borderColor 
+                      }}
+                    >
+                      {hack.status}
+                    </span>
+                    {hack.tags.map(tag => (
+                      <span 
+                        key={tag} 
+                        className="custom-badge border" 
+                        style={{ color: '#4F627D', backgroundColor: '#F8FAFC', borderColor: '#E2E8F0' }}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Title */}
+                  <h2 className="fs-5 fw-bold hackathon-card-title mb-4 lh-sm">
+                    {hack.title}
+                  </h2>
+
+                  {/* Details List */}
+                  <div className="d-flex flex-column gap-3 mb-4 flex-grow-1">
+                    <div className="d-flex align-items-center gap-3 detail-row">
+                      <Calendar size={18} />
+                      <span>{hack.date}</span>
+                    </div>
+                    <div className="d-flex align-items-center gap-3 detail-row">
+                      <MapPin size={18} />
+                      <span className="text-truncate">{hack.location}</span>
+                    </div>
+                    <div className="d-flex align-items-center gap-3 detail-row">
+                      <Users size={18} />
+                      <span>Team Size: {hack.team}</span>
+                    </div>
+                    <div className="d-flex align-items-center gap-3" style={{ fontSize: '14px', fontWeight: '600', color: '#0A1220' }}>
+                      <Trophy size={18} className="text-warning" />
+                      <span>Prize: {hack.prize}</span>
+                    </div>
+                  </div>
+
+                  {/* Action Button */}
+                  <button 
+                    onClick={() => navigate(`/participant/hackathon/${hack.id}`)}
+                    className="btn btn-view-details w-100 d-flex align-items-center justify-content-center gap-2 py-2 mt-auto"
+                  >
+                    View Details
+                    <ArrowRight size={18} />
+                  </button>
+                </div>
+              </div>
+            ))
+          ) : (
+            /* Empty State when no results match */
+            <div className="col-12">
+              <div 
+                className="d-flex flex-column align-items-center justify-content-center text-center p-5 rounded-4 bg-white"
+                style={{ border: '2px dashed #E2E8F0' }}
+              >
+                <Search size={40} color="#CBD5E1" className="mb-3" />
+                <h3 className="fs-5 fw-bold mb-2" style={{ color: '#0A1220' }}>No hackathons found</h3>
+                <p className="fw-medium m-0" style={{ color: '#7A8A9E' }}>
+                  We couldn't find any results matching "{searchQuery}". Try adjusting your search.
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

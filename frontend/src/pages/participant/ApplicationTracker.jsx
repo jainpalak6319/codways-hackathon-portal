@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React from 'react';
 import { Target, CheckCircle, Clock, ChevronRight, LayoutTemplate, Zap } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -36,37 +36,59 @@ const trackedApplications = [
 const ApplicationTracker = () => {
   const navigate = useNavigate();
 
-  // Helper function to render the calendar node matching your reference image
+  // Helper function to render the calendar node matching the reference UI
   const renderCalendarNode = (dateString, status) => {
     const [day, month] = dateString.split(' ');
 
-    // Styling based on status - accurately matching the reference image's color palette
     const styles = {
       completed: {
-        container: "border-emerald-200 shadow-sm",
-        top: "bg-emerald-600 text-white",
-        bottom: "bg-emerald-50 text-emerald-800"
+        container: "border shadow-sm",
+        borderColor: "#a7f3d0", // emerald-200
+        top: "bg-success text-white", // emerald-600 equivalent
+        bottom: "text-success", // emerald-800 equivalent
+        bottomBg: "#ecfdf5" // emerald-50
       },
       active: {
-        container: "border-blue-200 shadow-md scale-110 ring-4 ring-blue-50",
-        top: "bg-[#0d59a7] text-white", // Deep blue from reference
-        bottom: "bg-[#e2f0fb] text-[#333]" // Light blue from reference
+        container: "border shadow scale-110",
+        borderColor: "#bfdbfe", // blue-200
+        boxShadow: "0 0 0 4px #eff6ff", // ring-4 ring-blue-50
+        top: "text-white", 
+        topBg: "#0d59a7", // Deep blue from reference
+        bottom: "text-dark", 
+        bottomBg: "#e2f0fb" // Light blue from reference
       },
       upcoming: {
-        container: "border-slate-200 shadow-sm",
-        top: "bg-slate-200 text-slate-500",
-        bottom: "bg-slate-50 text-slate-400"
+        container: "border shadow-sm",
+        borderColor: "#e2e8f0", // slate-200
+        top: "text-secondary", 
+        topBg: "#e2e8f0", // slate-200
+        bottom: "text-secondary", 
+        bottomBg: "#f8fafc" // slate-50
       }
     };
 
     const currentStyle = styles[status];
 
     return (
-      <div className={`flex flex-col w-12 md:w-14 rounded-[12px] overflow-hidden border ${currentStyle.container} transition-all duration-300`}>
-        <div className={`w-full text-center py-1 md:py-1.5 text-lg font-black leading-none tracking-tight ${currentStyle.top}`}>
+      <div 
+        className={`d-flex flex-column rounded-3 overflow-hidden ${currentStyle.container}`}
+        style={{ 
+          width: '3.5rem', 
+          borderColor: currentStyle.borderColor,
+          boxShadow: currentStyle.boxShadow || '',
+          transition: 'all 0.3s'
+        }}
+      >
+        <div 
+          className={`w-100 text-center py-1 fw-black lh-1 ${currentStyle.top}`} 
+          style={{ fontSize: '1.125rem', backgroundColor: currentStyle.topBg || '' }}
+        >
           {day}
         </div>
-        <div className={`w-full text-center py-1 text-[11px] font-semibold uppercase tracking-widest ${currentStyle.bottom}`}>
+        <div 
+          className={`w-100 text-center py-1 fw-bold text-uppercase ${currentStyle.bottom}`}
+          style={{ fontSize: '11px', letterSpacing: '0.1em', backgroundColor: currentStyle.bottomBg || '' }}
+        >
           {month}
         </div>
       </div>
@@ -74,102 +96,108 @@ const ApplicationTracker = () => {
   };
 
   return (
-    <div className="max-w-[1400px] mx-auto p-4 md:p-6 lg:p-8 min-h-screen bg-slate-50 text-slate-600 font-sans animate-fade-in">
-      
-      {/* ================= HEADER ================= */}
-      <div className="mb-10">
-        <h1 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-3 flex items-center gap-3 tracking-tight">
-          Application Tracker <Target className="text-blue-600" size={32} />
-        </h1>
-        <p className="text-slate-500 text-lg">Track your progress and upcoming deadlines across all registered hackathons.</p>
-      </div>
+    <>
+      <style>
+        {`
+          .tracker-page { background-color: #f8fafc; min-height: 100vh; color: #475569; }
+          .tracker-card { border-radius: 2rem; border: 1px solid #e2e8f0; transition: box-shadow 0.3s; }
+          .tracker-card:hover { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+          .timeline-line { border-top: 3px solid #00b368; }
+          .timeline-dashed { border-top: 3px dashed rgba(0, 179, 104, 0.4); }
+          .custom-scrollbar::-webkit-scrollbar { height: 8px; }
+          .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
+          .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+          .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        `}
+      </style>
 
-      {/* ================= TRACKER CARDS ================= */}
-      <div className="space-y-8">
-        {trackedApplications.map((app) => (
-          <div key={app.id} className="bg-white rounded-[2rem] border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow relative">
+      <div className="container-fluid py-4 py-lg-5 tracker-page" style={{ maxWidth: '1400px' }}>
+        
+        {/* ================= HEADER ================= */}
+        <div className="mb-5">
+          <h1 className="display-6 fw-bolder text-dark mb-2 d-flex align-items-center gap-3" style={{ letterSpacing: '-0.025em' }}>
+            Application Tracker <Target className="text-primary" size={32} />
+          </h1>
+          <p className="fs-5 text-secondary">Track your progress and upcoming deadlines across all registered hackathons.</p>
+        </div>
 
-            {/* Card Header */}
-            <div className="p-6 md:p-8 border-b border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white relative z-10">
-              <div>
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center">
-                    <LayoutTemplate size={20} className="text-blue-600" />
+        {/* ================= TRACKER CARDS ================= */}
+        <div className="d-flex flex-column gap-4">
+          {trackedApplications.map((app) => (
+            <div key={app.id} className="card tracker-card shadow-sm bg-white overflow-hidden">
+
+              {/* Card Header */}
+              <div className="card-header bg-white border-bottom p-4 p-md-5 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+                <div>
+                  <div className="d-flex align-items-center gap-3 mb-2">
+                    <div className="rounded-3 d-flex align-items-center justify-content-center bg-primary-subtle border border-primary-subtle" style={{ width: '40px', height: '40px' }}>
+                      <LayoutTemplate size={20} className="text-primary" />
+                    </div>
+                    <h2 className="h4 fw-bold text-dark m-0">{app.name}</h2>
                   </div>
-                  <h2 className="text-2xl font-bold text-slate-900">{app.name}</h2>
+                  <div className="d-flex align-items-center gap-3 small mt-2 ms-1 text-secondary">
+                    <span className="d-flex align-items-center gap-1 fw-medium text-dark">
+                      <Zap size={16} className="text-warning" /> {app.role}
+                    </span>
+                    <span className="rounded-circle bg-secondary" style={{ width: '6px', height: '6px', opacity: '0.3' }}></span>
+                    <span className="fw-medium">Team: <strong className="text-dark">{app.teamName}</strong></span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-4 text-sm mt-3 ml-1">
-                  <span className="flex items-center gap-1.5 text-slate-600 font-medium">
-                    <Zap size={16} className="text-amber-500" /> {app.role}
-                  </span>
-                  <span className="w-1.5 h-1.5 bg-slate-300 rounded-full"></span>
-                  <span className="text-slate-500 font-medium">Team: <span className="text-slate-800 font-bold">{app.teamName}</span></span>
+
+                <button 
+                  onClick={() => navigate('/participant/team')}
+                  className="btn btn-outline-secondary rounded-3 px-4 py-2 fw-bold text-dark d-flex align-items-center gap-2"
+                >
+                  Go to Workspace <ChevronRight size={16} />
+                </button>
+              </div>
+
+              {/* Card Body: The Horizontal Timeline */}
+              <div className="card-body p-4 p-md-5 overflow-auto custom-scrollbar" style={{ backgroundColor: 'rgba(248, 250, 252, 0.5)' }}>
+                <div className="d-flex align-items-start justify-content-between position-relative pt-3 pb-2" style={{ minWidth: '700px' }}>
+                  
+                  {app.steps.map((step, index) => (
+                    <div key={index} className="d-flex flex-column align-items-center position-relative" style={{ width: '8rem' }}>
+                      
+                      {/* The Connecting Line */}
+                      {index !== 0 && (
+                        <div 
+                          className={`position-absolute w-100 ${index <= app.currentStepIndex ? 'timeline-line' : 'timeline-dashed'}`}
+                          style={{ top: '24px', right: '50%', zIndex: 0 }}
+                        ></div>
+                      )}
+
+                      {/* The Node (Calendar Style) */}
+                      <div className="position-relative mb-3 bg-white rounded-3" style={{ zIndex: 1 }}>
+                        {renderCalendarNode(step.date, step.status)}
+                      </div>
+
+                      {/* Step Title & Status Text */}
+                      <h6 className={`small fw-bold text-center mb-2 ${
+                        step.status === 'active' ? 'text-primary' : 
+                        step.status === 'completed' ? 'text-dark' : 'text-secondary'
+                      }`}>
+                        {step.title}
+                      </h6>
+                      
+                      <div className="d-flex align-items-center gap-1 fw-bold text-uppercase" style={{ fontSize: '10px', letterSpacing: '0.05em' }}>
+                        {step.status === 'completed' && <><CheckCircle size={12} className="text-success"/> <span className="text-success">Done</span></>}
+                        {step.status === 'active' && <><Clock size={12} className="text-primary"/> <span className="text-primary">Current</span></>}
+                        {step.status === 'upcoming' && <span className="text-secondary opacity-75">Pending</span>}
+                      </div>
+
+                    </div>
+                  ))}
+
                 </div>
               </div>
 
-              <button 
-                onClick={() => navigate('/student/team')}
-                className="bg-white border-2 border-slate-200 text-slate-700 px-6 py-3 rounded-xl font-bold text-sm hover:border-blue-600 hover:text-blue-600 transition-colors flex items-center gap-2"
-              >
-                Go to Workspace <ChevronRight size={16} />
-              </button>
             </div>
+          ))}
+        </div>
 
-            {/* Card Body: The Horizontal Timeline */}
-            <div className="p-6 md:p-10 relative z-10 overflow-x-auto custom-scrollbar bg-slate-50/50">
-              <div className="min-w-[700px] flex items-start justify-between relative pt-4 pb-2">
-                
-                {app.steps.map((step, index) => (
-                  <div key={index} className="flex flex-col items-center relative w-32 group">
-                    
-                    {/* The Connecting Line */}
-                    {index !== 0 && (
-                      <div className={`absolute top-6 right-1/2 w-full -z-10 ${
-                        index <= app.currentStepIndex 
-                        // SOLID GREEN LINE for completed paths
-                        ? 'border-t-[3px] border-[#00b368]' 
-                        // DOTTED GREEN LINE for upcoming paths (matching reference)
-                        : 'border-t-[3px] border-dashed border-[#00b368]/40'
-                      }`}></div>
-                    )}
-
-                    {/* The Node (Calendar Style) */}
-                    <div className="relative z-10 mb-4 bg-white rounded-[12px]">
-                      {renderCalendarNode(step.date, step.status)}
-                    </div>
-
-                    {/* Step Title & Status Text */}
-                    <h4 className={`text-sm font-bold text-center mb-1.5 ${
-                      step.status === 'active' ? 'text-blue-700' : 
-                      step.status === 'completed' ? 'text-slate-900' : 'text-slate-500'
-                    }`}>
-                      {step.title}
-                    </h4>
-                    
-                    <div className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider">
-                      {step.status === 'completed' && <><CheckCircle size={12} className="text-emerald-600"/> <span className="text-emerald-600">Done</span></>}
-                      {step.status === 'active' && <><Clock size={12} className="text-blue-600"/> <span className="text-blue-600">Current</span></>}
-                      {step.status === 'upcoming' && <span className="text-slate-400">Pending</span>}
-                    </div>
-
-                  </div>
-                ))}
-
-              </div>
-            </div>
-
-          </div>
-        ))}
       </div>
-
-      {/* Global CSS for scrollbar */}
-      <style dangerouslySetInnerHTML={{__html: `
-        .custom-scrollbar::-webkit-scrollbar { height: 8px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-      `}} />
-    </div>
+    </>
   );
 };
 

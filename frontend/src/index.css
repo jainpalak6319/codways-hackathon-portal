@@ -1,0 +1,40 @@
+@import "tailwindcss";
+@source "./src";
+
+@theme {
+  /* Sidebar & Branding (Updated to new Dark Navy & Teal) */
+  --color-sidebar-bg: #0A1220;       /* Dark Navy */
+  --color-sidebar-active: #00C2B2;   /* Vibrant Teal */
+  --color-sidebar-text: #7A8A9E;     /* Slate Gray for inactive text */
+  --color-sidebar-hover: #FFFFFF;    /* White for hover states */
+
+  /* Layout Backgrounds */
+  --color-app-bg: #F4F7FE;           /* Crisp off-white/blue-gray */
+  --color-surface: #FFFFFF;          /* Pure white for cards */
+
+  /* Text Colors */
+  --color-text-primary: #0A1220;     /* Dark Navy for headings */
+  --color-text-secondary: #4F627D;   /* Muted Slate for paragraphs */
+
+  /* Status & Icon Colors */
+  --color-accent-teal: #00C2B2;      /* Teal */
+  --color-accent-purple: #8B5CF6;    /* Purple */
+  --color-accent-orange: #F59E0B;    /* Amber/Orange */
+  --color-accent-blue: #3B82F6;      /* Blue */
+  --color-accent-rose: #F43F5E;      /* Rose/Red (Added for deadlines) */
+
+  /* Soft Backgrounds for Icons (10% opacity of accents) */
+  --color-bg-teal-light: color-mix(in srgb, var(--color-accent-teal) 10%, transparent);
+  --color-bg-purple-light: color-mix(in srgb, var(--color-accent-purple) 10%, transparent);
+  --color-bg-orange-light: color-mix(in srgb, var(--color-accent-orange) 10%, transparent);
+  --color-bg-blue-light: color-mix(in srgb, var(--color-accent-blue) 10%, transparent);
+  --color-bg-rose-light: color-mix(in srgb, var(--color-accent-rose) 10%, transparent);
+
+  /* Borders */
+  --color-border: #E2E8F0;           /* Soft border color for cards */
+}
+
+body {
+  background-color: var(--color-app-bg);
+  color: var(--color-text-primary);
+}
