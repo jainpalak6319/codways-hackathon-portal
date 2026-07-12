@@ -38,10 +38,10 @@ export const recentActivity = [
 ];
 
 export const quickActions = [
-  { key: 'create-hackathon', title: 'Create Hackathon', icon: 'calendar', color: 'primary', route: '/hackathons?new=1' },
-  { key: 'manage-users', title: 'Manage Users', icon: 'people', color: 'purple', route: '/users' },
-  { key: 'invite-judge', title: 'Invite Judges', icon: 'judge', color: 'orange', route: '/judges?invite=1' },
-  { key: 'view-reports', title: 'View Reports', icon: 'chart', color: 'teal', route: '/reports' },
-  { key: 'announcements', title: 'Announcements', icon: 'announce', color: 'green', route: '/announcements?new=1' },
-  { key: 'settings', title: 'Settings', icon: 'settings', color: 'slate', route: '/settings' },
+  { key: 'create-hackathon', title: 'Create Hackathon', icon: 'calendar', color: 'primary', route: '/admin/hackathons?new=1' },
+  { key: 'manage-users', title: 'Manage Users', icon: 'people', color: 'purple', route: '/admin/users' },
+  { key: 'invite-judge', title: 'Invite Judges', icon: 'judge', color: 'orange', route: '/admin/judges?invite=1' },
+  { key: 'view-reports', title: 'View Reports', icon: 'chart', color: 'teal', route: '/admin/reports' },
+  { key: 'announcements', title: 'Announcements', icon: 'announce', color: 'green', route: '/admin/announcements?new=1' },
+  { key: 'settings', title: 'Settings', icon: 'settings', color: 'slate', route: '/admin/settings' },
 ];

@@ -49,13 +49,13 @@
 }
 .dd-sidebar.collapsed .dd-sidebar-section-label { text-align: center; padding-left: 0; padding-right: 0; }
 
-.dd-sidebar-link {
+.dd-sidebar .dd-sidebar-link {
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 10px 12px;
   border-radius: 10px;
-  color: rgba(255,255,255,0.7);
+  color: #E4E7EC;
   font-size: 14px;
   font-weight: 500;
   margin-bottom: 3px;
@@ -64,11 +64,11 @@
   white-space: nowrap;
   overflow: hidden;
 }
-.dd-sidebar-link:hover {
+.dd-sidebar .dd-sidebar-link:hover {
   background: var(--sidebar-hover);
   color: #fff;
 }
-.dd-sidebar-link.active {
+.dd-sidebar .dd-sidebar-link.active {
   background: var(--sidebar-active);
   color: var(--sidebar-bg);
   font-weight: 700;

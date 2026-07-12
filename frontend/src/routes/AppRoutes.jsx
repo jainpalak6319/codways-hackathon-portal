@@ -50,6 +50,7 @@ function AppRoutes() {
         <Route index element={<AdminDashboard />} />
   <Route path="dashboard" element={<AdminDashboard />} />
   <Route path="hackathons" element={<Hackathons />} />
+<Route path="hackathons/:id" element={<Hackathons />} />
 <Route path="participants" element={<Participants />} />
 <Route path="judges" element={<Judges />} />
 <Route path="teams" element={<Teams />} />

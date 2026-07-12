@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Avatar from "../../components/admin/common/Avatar";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import './Settings.css';
 
 const TABS = ['Profile', 'General', 'Notifications', 'Security'];
@@ -14,13 +14,13 @@ function Toggle({ on, onClick, label }) {
 }
 
 export default function Settings() {
-  const { user } = useAuth();
+  const { user } = useSelector((state) => state.auth);
   const [tab, setTab] = useState('Profile');
   const [toggles, setToggles] = useState({
     emailNotif: true, submissionAlerts: true, weeklyDigest: false,
     darkMode: false, publicProfile: true, twoFactor: false,
   });
-  const [profile, setProfile] = useState({ name: user.name, email: user.email });
+  const [profile, setProfile] = useState({ name: user?.name || '', email: user?.email || '' });
 
   const setToggle = (key) => setToggles((t) => ({ ...t, [key]: !t[key] }));
 
@@ -60,7 +60,7 @@ export default function Settings() {
             </div>
             <div>
               <label className="form-label-sm">Role</label>
-              <input className="input-soft" value={user.role} disabled style={{ background: 'var(--bg)', color: 'var(--text-muted)' }} />
+              <input className="input-soft" value={user?.role || ''} disabled style={{ background: 'var(--bg)', color: 'var(--text-muted)' }} />
             </div>
             <button className="btn-primary-soft align-self-start">Save Changes</button>
           </div>
