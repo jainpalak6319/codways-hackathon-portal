@@ -9,15 +9,15 @@ const StudentSidebar = ({ children }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Added Profile to the main menu list
-  const menuItems = [
-    { name: 'Dashboard', icon: Home, path: '/student/dashboard' },
-    { name: 'Explorer', icon: Compass, path: '/student/explorer' },
-    { name: 'My Team', icon: Users, path: '/student/team' },
-    { name: 'Application Tracker', icon: Radio, path: '/student/tracker' },
-    { name: 'Submission', icon: Radio, path: '/student/submissions' },
-    { name: 'Certificates', icon: Award, path: '/student/certificates' },
-    { name: 'Profile', icon: User, path: '/student/profile' }, 
-  ];
+ const menuItems = [
+  { name: 'Dashboard', icon: Home, path: '/participant/dashboard' },
+  { name: 'Explorer', icon: Compass, path: '/participant/explorer' },
+  { name: 'My Team', icon: Users, path: '/participant/team' },
+  { name: 'Application Tracker', icon: Radio, path: '/participant/tracker' },
+  { name: 'Submission', icon: Radio, path: '/participant/submissions' },
+  { name: 'Certificates', icon: Award, path: '/participant/certificates' },
+  { name: 'Profile', icon: User, path: '/participant/profile' },
+];
 
   return (
     <div className="flex h-screen bg-[#F4F7FE] overflow-hidden font-sans">
