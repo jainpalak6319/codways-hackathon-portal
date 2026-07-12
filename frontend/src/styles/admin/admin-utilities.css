@@ -1,0 +1,182 @@
+/* Base utility classes used across every admin page/component.
+   Everything is scoped under .admin-theme (the wrapper AdminLayoutNew already
+   applies) so none of this can ever leak into Home / Login / SignUp / Participant
+   / Judge pages, even if a class name happens to coincide in the future. */
+
+.admin-theme * {
+  box-sizing: border-box;
+}
+
+.admin-theme a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.admin-theme button {
+  font-family: inherit;
+}
+
+.admin-theme .card-surface {
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border);
+}
+
+.admin-theme .text-muted-soft { color: var(--text-muted); }
+
+.admin-theme .scroll-x {
+  overflow-x: auto;
+}
+
+.admin-theme ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.admin-theme ::-webkit-scrollbar-thumb {
+  background: #D1D5DB;
+  border-radius: 8px;
+}
+.admin-theme ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.admin-theme a:focus-visible,
+.admin-theme button:focus-visible,
+.admin-theme input:focus-visible {
+  outline: 2px solid var(--sidebar-active);
+  outline-offset: 2px;
+}
+
+.admin-theme .page-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.admin-theme .page-subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.admin-theme .page-header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.admin-theme .btn-primary-soft {
+  background: var(--sidebar-active);
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 10px 18px;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: var(--transition);
+  cursor: pointer;
+}
+.admin-theme .btn-primary-soft:hover {
+  background: #009DAB;
+  color: #fff;
+}
+
+.admin-theme .btn-outline-soft {
+  background: #fff;
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-weight: 600;
+  font-size: 14px;
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: var(--transition);
+  cursor: pointer;
+}
+.admin-theme .btn-outline-soft:hover {
+  background: #F9FAFB;
+}
+
+.admin-theme .section-card {
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-card);
+  padding: 20px;
+}
+
+.admin-theme .section-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.admin-theme .section-card-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.admin-theme .link-teal {
+  color: var(--sidebar-active);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.admin-theme .form-label-sm {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+  display: block;
+}
+
+.admin-theme .input-soft {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 9px 12px;
+  font-size: 14px;
+  color: var(--text);
+  background: #fff;
+}
+.admin-theme .input-soft:focus {
+  outline: none;
+  border-color: var(--sidebar-active);
+  box-shadow: 0 0 0 3px var(--teal-tint);
+}
+
+.admin-theme .dd-filter-chip {
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  background: #fff;
+  cursor: pointer;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.admin-theme .dd-filter-chip.active {
+  background: var(--sidebar-bg);
+  color: #fff;
+  border-color: var(--sidebar-bg);
+}
+
+@media (max-width: 576px) {
+  .admin-theme .page-title { font-size: 19px; }
+  .admin-theme .section-card { padding: 16px; }
+}

@@ -31,7 +31,7 @@ export default function HackathonTable({ hackathons = [], onDelete }) {
               <td>
                 <div className="dd-hk-name-cell">
                   <div className="dd-hk-banner" style={{ background: `${h.color}1A` }}>{h.banner}</div>
-                  <Link to={`/hackathons/${h.id}`} style={{ color: 'var(--text)' }}>{h.name}</Link>
+                  <Link to={`/admin/hackathons/${h.id}`} style={{ color: 'var(--text)' }}>{h.name}</Link>
                 </div>
               </td>
               <td style={{ color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>

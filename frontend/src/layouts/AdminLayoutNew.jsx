@@ -8,6 +8,7 @@ import {
 } from "../features/admin/context/SidebarContext";
 import "./AdminLayoutNew.css";
 import "../styles/admin/admin-theme.css";
+import "../styles/admin/admin-utilities.css";
 function AdminLayoutContent() {
   const { mobileOpen } = useSidebar();
 
