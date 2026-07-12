@@ -1,0 +1,8 @@
+.dd-role-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px; box-shadow: var(--shadow-card); height: 100%; }
+.dd-perm-table th, .dd-perm-table td { text-align: center; }
+.dd-perm-table th:first-child, .dd-perm-table td:first-child { text-align: left; }
+.dd-perm-check {
+  width: 18px; height: 18px; border-radius: 5px; border: 1.5px solid var(--border); display: inline-flex;
+  align-items: center; justify-content: center; cursor: pointer;
+}
+.dd-perm-check.on { background: var(--sidebar-active); border-color: var(--sidebar-active); color: #fff; }
