@@ -23,7 +23,7 @@ const HackathonCard = ({
     <div className="card-overlay">
 
         <h2>
-           <h2>{title}</h2>
+           {title}
         </h2>
 
         <span>2025</span>

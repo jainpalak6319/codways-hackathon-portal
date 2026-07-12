@@ -1,0 +1,4 @@
+.dd-team-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px; box-shadow: var(--shadow-card); height: 100%; display: flex; flex-direction: column; gap: 10px; }
+.dd-team-avatars { display: flex; }
+.dd-team-avatars > div { margin-left: -8px; border: 2px solid #fff; }
+.dd-team-avatars > div:first-child { margin-left: 0; }

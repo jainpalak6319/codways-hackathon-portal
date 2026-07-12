@@ -10,14 +10,24 @@ import Explorer from "../pages/participant/Explorer";
 import HackathonDetails from "../pages/participant/HackathonDetails";
 import RegistrationFlow from "../pages/participant/RegistrationFlow";
 import MyTeams from "../pages/participant/MyTeams";
-import Submissions from "../pages/participant/Submissions";
+import ParticipantSubmissions from "../pages/participant/Submissions";
 import ApplicationTracker from "../pages/participant/ApplicationTracker";
 import Profile from "../pages/participant/Profile";
 import Certificate from "../features/certificates/Certificate";
-import AdminLayout from "../layouts/AdminLayout";
+import AdminLayout from "../layouts/AdminLayoutNew";
 import PublicLayout from "../layouts/PublicLayout";
 import ParticipantLayout from "../layouts/ParticipantLayout";
 import ProtectedRoute from "./ProtectedRoute";
+import Hackathons from "../pages/admin/Hackathons";
+import Participants from "../pages/admin/Participants";
+import Judges from "../pages/admin/Judges";
+import Teams from "../pages/admin/Teams";
+import Submissions from "../pages/admin/Submissions";
+import Announcements from "../pages/admin/Announcements";
+import Reports from "../pages/admin/Reports";
+import Users from "../pages/admin/Users";
+import Roles from "../pages/admin/Roles";
+import Settings from "../pages/admin/Settings";
 function AppRoutes() {
   return (
     <Routes>
@@ -37,10 +47,18 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       >
-        <Route
-          path="dashboard"
-          element={<AdminDashboard />}
-        />
+        <Route index element={<AdminDashboard />} />
+  <Route path="dashboard" element={<AdminDashboard />} />
+  <Route path="hackathons" element={<Hackathons />} />
+<Route path="participants" element={<Participants />} />
+<Route path="judges" element={<Judges />} />
+<Route path="teams" element={<Teams />} />
+<Route path="submissions" element={<Submissions />} />
+<Route path="announcements" element={<Announcements />} />
+<Route path="reports" element={<Reports />} />
+<Route path="users" element={<Users />} />
+<Route path="roles" element={<Roles />} />
+<Route path="settings" element={<Settings />} />
       </Route>
       {/* ================= JUDGE ================= */}
       <Route
@@ -66,7 +84,10 @@ function AppRoutes() {
   <Route path="hackathon/:id" element={<HackathonDetails />} />
   <Route path="register/:id" element={<RegistrationFlow />} />
   <Route path="team" element={<MyTeams />} />
-  <Route path="submissions" element={<Submissions />} />
+<Route
+  path="submissions"
+  element={<ParticipantSubmissions />}
+/>
   <Route path="tracker" element={<ApplicationTracker />} />
   <Route path="certificates" element={<Certificate />} />
   <Route path="profile" element={<Profile />} />

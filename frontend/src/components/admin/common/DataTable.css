@@ -1,0 +1,13 @@
+.dd-pagination {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-top: 14px; margin-top: 6px; border-top: 1px solid var(--border);
+  flex-wrap: wrap; gap: 10px;
+}
+.dd-page-btn {
+  width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(--border);
+  background: #fff; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 13px; color: var(--text-muted);
+}
+.dd-page-btn:hover:not(:disabled) { background: var(--bg); }
+.dd-page-btn.active { background: var(--sidebar-active); color: #fff; border-color: var(--sidebar-active); }
+.dd-page-btn:disabled { opacity: 0.4; cursor: not-allowed; }

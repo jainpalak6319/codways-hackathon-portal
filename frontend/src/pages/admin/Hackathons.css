@@ -1,0 +1,9 @@
+.dd-hk-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.dd-hk-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-card); display: flex; flex-direction: column; }
+.dd-hk-card-banner { height: 84px; display: flex; align-items: center; justify-content: center; font-size: 34px; }
+.dd-hk-card-body { padding: 16px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+.dd-hk-card-title { font-size: 15px; font-weight: 700; color: var(--text); }
+.dd-hk-card-meta { font-size: 12.5px; color: var(--text-muted); display: flex; justify-content: space-between; }
+.dd-view-toggle { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.dd-view-toggle button { border: none; background: #fff; padding: 8px 10px; cursor: pointer; color: var(--text-muted); display: flex; }
+.dd-view-toggle button.active { background: var(--bg); color: var(--text); }

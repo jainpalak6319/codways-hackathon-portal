@@ -400,7 +400,7 @@ const handleSubmit = async (e) => {
               <rect x="5" y="11" width="14" height="10" rx="2" fill="none" stroke="currentColor" strokeWidth="1.6" />
               <path d="M8 11V7a4 4 0 0 1 8 0v4" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
             </svg>
-            By continuing, you agree to the <Link to="/terms">Terms of Service</Link> and <Link TO="/privacy">Privacy Policy</Link>.
+            By continuing, you agree to the <Link to="/terms">Terms of Service</Link> and <Link to="/privacy">Privacy Policy</Link>.
           </p>
         </div>
       </section>
