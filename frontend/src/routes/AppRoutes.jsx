@@ -28,6 +28,8 @@ import Reports from "../pages/admin/Reports";
 import Users from "../pages/admin/Users";
 import Roles from "../pages/admin/Roles";
 import Settings from "../pages/admin/Settings";
+import ForgotPassword from "../pages/public/ForgotPassword";
+import ResetPassword from "../pages/public/ResetPassword";
 function AppRoutes() {
   return (
     <Routes>
@@ -37,6 +39,9 @@ function AppRoutes() {
       </Route>
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password/:token" element={<ResetPassword />} />
+
       <Route path="/unauthorized" element={<Unauthorized />} />
       {/* ================= ADMIN ================= */}
       <Route

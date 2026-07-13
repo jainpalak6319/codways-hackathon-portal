@@ -6,4 +6,12 @@ export const loginUser = (data) => API.post("/auth/login", data);
 
 export const logoutUser = () => API.post("/auth/logout");
 
+export const forgotPassword = (email) =>
+  API.post("/auth/forgot-password", { email });
+
+export const resetPassword = (token, password) =>
+  API.post(`/auth/reset-password/${token}`, {
+    password,
+  });
+
 export const getCurrentUser = () => API.get("/auth/me");

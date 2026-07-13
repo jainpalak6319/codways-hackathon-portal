@@ -1,5 +1,5 @@
 import express from "express";
-import { signup,login,logout,me,githubCallback } from "../controllers/auth.controller.js";
+import { signup,login,logout,me,githubCallback,forgotPasswordController,resetPasswordController, } from "../controllers/auth.controller.js";
 import passport from "passport";
 import { googleCallback } from "../controllers/auth.controller.js";
 import {
@@ -8,12 +8,18 @@ import {
   validate,
 } from "../validators/auth.validator.js";
 import { protect } from "../middleware/auth.middleware.js";
+import sendEmail from "../utils/sendEmail.js";
 
 const router = express.Router();
 
 // Signup
 router.post("/signup", signupValidator, validate, signup);
 router.post("/login", loginValidator, validate, login);
+router.post("/forgot-password", forgotPasswordController);
+router.post(
+  "/reset-password/:token",
+  resetPasswordController
+);
 router.post("/logout", protect, logout);
 router.get("/me", protect, me);
 // Redirect user to Google
@@ -33,12 +39,12 @@ router.get(
   }),
   googleCallback
 );
-router.get(
-  "/github",
-  passport.authenticate("github", {
-    scope: ["user:email"],
-  })
-);
+// router.get(
+//   "/github",
+//   passport.authenticate("github", {
+//     scope: ["user:email"],
+//   })
+// );
 
 router.get("/github", (req, res) => {
   const redirectUrl = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&redirect_uri=${encodeURIComponent(process.env.GITHUB_CALLBACK_URL)}&scope=user:email`;
@@ -46,4 +52,5 @@ router.get("/github", (req, res) => {
 });
 
 router.get("/github/callback", githubCallback);
+
 export default router;

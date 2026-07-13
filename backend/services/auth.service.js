@@ -1,5 +1,13 @@
 import User from "../models/User.js";
-import { generateToken } from "../utils/jwt.js";
+import {
+  generateToken,
+  generateResetToken,
+  verifyResetToken,
+} from "../utils/jwt.js";
+
+import sendEmail from "../utils/sendEmail.js";
+import resetPasswordTemplate from "../emails/resetPasswordTemplate.js";
+import env from "../config/env.js";
 import ApiError from "../utils/ApiError.js";
 /**
  * Register a new user
@@ -93,6 +101,69 @@ export const googleLogin = async (user) => {
       avatar: user.avatar,
       isVerified: user.isVerified,
     },
+  };
+};
+/**
+ * Forgot Password
+ */
+export const forgotPassword = async (email) => {
+  // Find user
+  const user = await User.findOne({ email });
+
+  /**
+   * Security:
+   * Never reveal whether an email exists.
+   */
+  if (!user) {
+    return {
+      message:
+        "If an account with that email exists, a password reset link has been sent.",
+    };
+  }
+
+  // Generate reset token
+  const resetToken = generateResetToken(user);
+
+  // Build frontend reset URL
+  const resetLink = `${env.CLIENT_URL}/reset-password/${resetToken}`;
+
+  // Send email
+  await sendEmail({
+    to: user.email,
+    subject: "Reset Your Password",
+    html: resetPasswordTemplate(user.fullName, resetLink),
+  });
+
+  return {
+    message:
+      "If an account with that email exists, a password reset link has been sent.",
+  };
+};
+/**
+ * Reset Password
+ */
+export const resetPassword = async (token, password) => {
+  // Verify JWT
+  const decoded = verifyResetToken(token);
+
+  // Find user
+  const user = await User.findById(decoded.id).select("+password");
+
+  if (!user) {
+    throw new ApiError(404, "User not found.");
+  }
+
+  // Update password
+  user.password = password;
+
+  // Mark verified (optional but useful)
+  user.isVerified = true;
+
+  // Save -> pre("save") hook hashes password
+  await user.save();
+
+  return {
+    message: "Password reset successful.",
   };
 };
 export const getCurrentUser = async (userId) => {
