@@ -1,5 +1,12 @@
 import User from "../models/User.js";
-import { registerUser, loginUser , getCurrentUser,googleLogin} from "../services/auth.service.js";
+import {
+  registerUser,
+  loginUser,
+  googleLogin,
+  forgotPassword,
+  getCurrentUser,
+  resetPassword,
+} from "../services/auth.service.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import axios from "axios";
 
@@ -164,6 +171,41 @@ export const githubCallback = async (req, res, next) => {
     return res.redirect(redirectUrl);
   } catch (error) {
     console.log("GitHub callback error:", error.response?.data || error.message);
+    next(error);
+  }
+};
+/**
+ * Forgot Password
+ */
+export const forgotPasswordController = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+
+    const result = await forgotPassword(email);
+
+    res.status(200).json({
+      success: true,
+      message: result.message,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+/**
+ * Reset Password
+ */
+export const resetPasswordController = async (req, res, next) => {
+  try {
+    const { token } = req.params;
+    const { password } = req.body;
+
+    const result = await resetPassword(token, password);
+
+    res.status(200).json({
+      success: true,
+      message: result.message,
+    });
+  } catch (error) {
     next(error);
   }
 };
