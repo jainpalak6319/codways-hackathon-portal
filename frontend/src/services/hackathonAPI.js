@@ -1,18 +1,56 @@
-import { mockDelay } from './api';
-import { hackathons } from '../data/admin/mockHackathons';
+import axios from 'axios';
+
+// Ensure this matches your Express backend URL
+const BASE_URL = 'http://localhost:5000/api/hackathons';
 
 export async function getHackathons() {
-  return mockDelay(hackathons);
+  try {
+    const response = await axios.get(BASE_URL);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching hackathons:", error);
+    return [];
+  }
 }
+
 export async function getHackathonById(id) {
-  return mockDelay(hackathons.find((h) => h.id === id));
+  try {
+    const response = await axios.get(`${BASE_URL}/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching hackathon with id ${id}:`, error);
+    return null;
+  }
 }
+
 export async function createHackathon(payload) {
-  return mockDelay({ id: `hk_${Date.now()}`, ...payload });
+  try {
+    const response = await axios.post(BASE_URL, payload);
+    return response.data;
+  } catch (error) {
+    console.error("Error creating hackathon:", error);
+    throw error;
+  }
 }
+
 export async function updateHackathon(id, payload) {
-  return mockDelay({ id, ...payload });
+  try {
+    // Note: You will need a PUT or PATCH route in your backend for this to work
+    const response = await axios.put(`${BASE_URL}/${id}`, payload);
+    return response.data;
+  } catch (error) {
+    console.error(`Error updating hackathon with id ${id}:`, error);
+    throw error;
+  }
 }
+
 export async function deleteHackathon(id) {
-  return mockDelay({ success: true, id });
+  try {
+    const response = await axios.delete(`${BASE_URL}/${id}`);
+    // Returning the id just like your friend's mock did so the UI updates correctly
+    return { success: true, id };
+  } catch (error) {
+    console.error(`Error deleting hackathon with id ${id}:`, error);
+    throw error;
+  }
 }

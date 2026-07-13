@@ -4,11 +4,14 @@ import User from '../models/User.js';
 
 const router = express.Router();
 
-
+// ==========================================
+// 1. GET ALL TEAMS FOR A USER (Used by MyTeams.jsx)
+// ==========================================
 router.get('/user/:userId', async (req, res) => {
   try {
     const teams = await Team.find({ members: req.params.userId })
-                            .populate('members', 'name participationType skills')
+                            // ADDED: email and college to populate list
+                            .populate('members', 'fullName email college participationType skills')
                             .sort({ createdAt: -1 });
 
     if (!teams || teams.length === 0) {
@@ -22,16 +25,21 @@ router.get('/user/:userId', async (req, res) => {
   }
 });
 
-router.get('/:userId', async (req, res) => {
+
+// ==========================================
+// 2. GET A SPECIFIC TEAM BY TEAM ID (Used by TeamWorkspace.jsx)
+// ==========================================
+router.get('/:teamId', async (req, res) => {
   try {
-    const user = await User.findById(req.params.userId);
-    if (!user || !user.team) {
-      return res.status(200).json({ hasTeam: false }); // User has no team yet
+    // Find the team directly by its ID
+    const team = await Team.findById(req.params.teamId)
+                            // ADDED: email and college to populate list
+                            .populate('members', 'fullName email college participationType skills');
+    
+    if (!team) {
+      return res.status(404).json({ hasTeam: false, error: "Team not found" });
     }
 
-    // Find the team and "populate" the members array with actual user data (names, roles)
-    const team = await Team.findById(user.team).populate('members', 'name participationType skills');
-    
     res.status(200).json({ hasTeam: true, team });
   } catch (error) {
     console.error(error);

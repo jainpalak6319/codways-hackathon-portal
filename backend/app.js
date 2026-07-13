@@ -8,6 +8,9 @@ import "./config/passport.js";
 
 import authRoutes from "./routes/auth.routes.js";
 import errorHandler from "./middleware/error.middleware.js";
+import registrationRoutes from "./routes/registration.routes.js";
+import teamRoutes from "./routes/team.routes.js";
+import hackathonRoutes from './routes/hackathonRoutes.js';
 const app = express();
 
 // Security Headers
@@ -36,6 +39,9 @@ app.use(passport.initialize());
 // Logger
 app.use(morgan("dev"));
 app.use("/api/auth", authRoutes);
+app.use('/api', registrationRoutes);
+app.use('/api/team', teamRoutes);
+app.use('/api/hackathons', hackathonRoutes);
 
 // Health Check Route
 app.get("/", (req, res) => {

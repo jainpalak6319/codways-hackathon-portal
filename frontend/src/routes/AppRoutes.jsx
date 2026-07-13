@@ -10,6 +10,7 @@ import Explorer from "../pages/participant/Explorer";
 import HackathonDetails from "../pages/participant/HackathonDetails";
 import RegistrationFlow from "../pages/participant/RegistrationFlow";
 import MyTeams from "../pages/participant/MyTeams";
+import TeamWorkspace from "../pages/participant/TeamWorkspace";
 import ParticipantSubmissions from "../pages/participant/Submissions";
 import ApplicationTracker from "../pages/participant/ApplicationTracker";
 import Profile from "../pages/participant/Profile";
@@ -85,6 +86,7 @@ function AppRoutes() {
   <Route path="hackathon/:id" element={<HackathonDetails />} />
   <Route path="register/:id" element={<RegistrationFlow />} />
   <Route path="team" element={<MyTeams />} />
+  <Route path="team/:teamId" element={<TeamWorkspace />} />
 <Route
   path="submissions"
   element={<ParticipantSubmissions />}
